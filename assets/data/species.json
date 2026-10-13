@@ -1,0 +1,1019 @@
+[
+  {
+    "id": "cypripedium_calceolus",
+    "nameRu": "Венерин башмачок настоящий",
+    "nameLat": "Cypripedium calceolus L.",
+    "family": "Орхидные (Orchidaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 15,
+      "max": 50
+    },
+    "flowerColors": [
+      "yellow"
+    ],
+    "leafShape": "oval",
+    "habitats": [
+      "forest",
+      "meadow"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Многолетняя орхидея с одиночным крупным цветком.",
+    "descLeaves": "Листья эллиптические, с дуговидными жилками.",
+    "descFlower": "Губа жёлтая, вздутая, с бурыми пятнами.",
+    "descFruit": "Плод — сухая коробочка с многочисленными семенами.",
+    "habitatText": "Светлые леса, опушки и луговины на известковых почвах.",
+    "features": "Самый узнаваемый вид орхидей парка; не выкапывать и не срывать.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "cypripedium_macranthos",
+    "nameRu": "Венерин башмачок крупноцветковый",
+    "nameLat": "Cypripedium macranthos Sw.",
+    "family": "Орхидные (Orchidaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 20,
+      "max": 60
+    },
+    "flowerColors": [
+      "purple",
+      "pink"
+    ],
+    "leafShape": "oval",
+    "habitats": [
+      "forest",
+      "meadow"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Крупная многолетняя орхидея с одиночным цветком.",
+    "descLeaves": "Листья широкие, овальные, стебель опушённый.",
+    "descFlower": "Губа крупная, мешковидная, розово-пурпурная.",
+    "descFruit": "Коробочка раскрывается продольными щелями.",
+    "habitatText": "Разреженные леса и лесные поляны.",
+    "features": "Цветок может менять оттенок от розового до пурпурного.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "orchis_militaris",
+    "nameRu": "Ятрышник шлемоносный",
+    "nameLat": "Orchis militaris L.",
+    "family": "Орхидные (Orchidaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 20,
+      "max": 50
+    },
+    "flowerColors": [
+      "purple",
+      "pink"
+    ],
+    "leafShape": "lanceolate",
+    "habitats": [
+      "meadow",
+      "steppe"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Клубневое многолетнее растение с плотным соцветием.",
+    "descLeaves": "Листья ланцетные, собраны у основания.",
+    "descFlower": "Цветки собраны в колос; верхние листочки образуют «шлем».",
+    "descFruit": "Плод — коробочка.",
+    "habitatText": "Сухие луга и степные склоны.",
+    "features": "Опыление зависит от насекомых; клубни нельзя повреждать.",
+    "parkZones": [
+      "labydya",
+      "buotama",
+      "diring",
+      "kysyl_eles"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "fritillaria_dagana",
+    "nameRu": "Рябчик даганский",
+    "nameLat": "Fritillaria dagana Turcz.",
+    "family": "Лилейные (Liliaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 20,
+      "max": 45
+    },
+    "flowerColors": [
+      "brown",
+      "purple"
+    ],
+    "leafShape": "linear",
+    "habitats": [
+      "meadow",
+      "steppe"
+    ],
+    "floweringMonths": [
+      5,
+      6
+    ],
+    "fruitingMonths": [
+      6,
+      7
+    ],
+    "descGeneral": "Луковичное растение с поникающим колокольчатым цветком.",
+    "descLeaves": "Листья узкие, линейные, верхние закручиваются усиками.",
+    "descFlower": "Околоцветник буровато-пурпурный, шахматного рисунка.",
+    "descFruit": "Плод — коробочка с плоскими семенами.",
+    "habitatText": "Степные склоны и сухие луговины.",
+    "features": "Размножается луковицами и семенами.",
+    "parkZones": [
+      "labydya",
+      "buotama",
+      "diring",
+      "kysyl_eles"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "paeonia_anomala",
+    "nameRu": "Пион уклоняющийся",
+    "nameLat": "Paeonia anomala L.",
+    "family": "Пионовые (Paeoniaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 40,
+      "max": 90
+    },
+    "flowerColors": [
+      "red",
+      "pink"
+    ],
+    "leafShape": "divided",
+    "habitats": [
+      "forest",
+      "meadow"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Крупное многолетнее растение с рассечёнными листьями.",
+    "descLeaves": "Листья дваждыперисторассечённые, доли узкие.",
+    "descFlower": "Цветки одиночные, красно-розовые, с жёлтыми тычинками.",
+    "descFruit": "Плод состоит из нескольких листовок.",
+    "habitatText": "Опушки, поляны и степные участки.",
+    "features": "Декоративный вид; медленно восстанавливается после повреждений.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "rhodiola_rosea",
+    "nameRu": "Родиола розовая",
+    "nameLat": "Rhodiola rosea L.",
+    "family": "Толстянковые (Crassulaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 10,
+      "max": 35
+    },
+    "flowerColors": [
+      "yellow"
+    ],
+    "leafShape": "oval",
+    "habitats": [
+      "rocks",
+      "riverbank"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Суккулентное многолетнее растение с толстым корневищем.",
+    "descLeaves": "Листья мясистые, сидячие, с зубчатым краем.",
+    "descFlower": "Цветки мелкие, жёлтые, собраны в щиток.",
+    "descFruit": "Плод — листовка с мелкими семенами.",
+    "habitatText": "Сырые скалы, берега ручьёв и каменистые склоны.",
+    "features": "Имеет лекарственное значение; сбор дикорастущих растений запрещён.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "saxifraga_cernua",
+    "nameRu": "Камнеломка поникшая",
+    "nameLat": "Saxifraga cernua L.",
+    "family": "Камнеломковые (Saxifragaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 5,
+      "max": 20
+    },
+    "flowerColors": [
+      "white"
+    ],
+    "leafShape": "heart",
+    "habitats": [
+      "rocks",
+      "wetland"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Небольшое растение, приспособленное к холодным местообитаниям.",
+    "descLeaves": "Нижние листья округлые, верхние уменьшены.",
+    "descFlower": "Цветки белые, поникающие, одиночные или в рыхлой кисти.",
+    "descFruit": "Образуются коробочки и выводковые почки.",
+    "habitatText": "Влажные расщелины скал и каменистые берега.",
+    "features": "Вегетативные выводковые почки помогают переживать короткое лето.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "oxytropis_lenensis",
+    "nameRu": "Остролодочник ленский",
+    "nameLat": "Oxytropis lenensis Jurtzev",
+    "family": "Бобовые (Fabaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 8,
+      "max": 25
+    },
+    "flowerColors": [
+      "purple"
+    ],
+    "leafShape": "compound",
+    "habitats": [
+      "steppe",
+      "rocks"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Подушковидное многолетнее растение.",
+    "descLeaves": "Листья сложные, непарноперистые, с опушёнными листочками.",
+    "descFlower": "Цветки фиолетовые, в плотных головчатых соцветиях.",
+    "descFruit": "Плод — боб, покрытый волосками.",
+    "habitatText": "Степные склоны и известняковые осыпи.",
+    "features": "Эндемичный для бассейна Лены вид; требует уточнения ареала.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "labydya"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "astragalus_lenensis",
+    "nameRu": "Астрагал ленский",
+    "nameLat": "Astragalus lenensis Bunge",
+    "family": "Бобовые (Fabaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 10,
+      "max": 30
+    },
+    "flowerColors": [
+      "yellow"
+    ],
+    "leafShape": "compound",
+    "habitats": [
+      "steppe",
+      "sand"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Низкорослое травянистое растение с разветвлённым корнем.",
+    "descLeaves": "Листья сложные, листочки эллиптические.",
+    "descFlower": "Цветки желтоватые, собраны в кисти.",
+    "descFruit": "Плод — боб с двумя створками.",
+    "habitatText": "Сухие степные склоны и песчаные участки.",
+    "features": "Характерен для открытых сухих местообитаний.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "saamys_kumaga"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "calamagrostis_holmii",
+    "nameRu": "Вейник Хольма",
+    "nameLat": "Calamagrostis holmii Lange",
+    "family": "Злаки (Poaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 30,
+      "max": 80
+    },
+    "flowerColors": [
+      "green"
+    ],
+    "leafShape": "linear",
+    "habitats": [
+      "sand",
+      "wetland"
+    ],
+    "floweringMonths": [
+      7
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Многолетний злак, образующий рыхлые дерновины.",
+    "descLeaves": "Листья длинные, узкие, шероховатые.",
+    "descFlower": "Соцветие — метёлка с зеленоватыми колосками.",
+    "descFruit": "Зерновка заключена в цветковые чешуи.",
+    "habitatText": "Пески тукуланов и влажные понижения.",
+    "features": "Укрепляет песчаный субстрат и участвует в формировании растительного покрова.",
+    "parkZones": [
+      "kysyl_eles",
+      "saamys_kumaga",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "koeleria_lenae",
+    "nameRu": "Тонконог ленский",
+    "nameLat": "Koeleria lenensis Roshev.",
+    "family": "Злаки (Poaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 15,
+      "max": 45
+    },
+    "flowerColors": [
+      "green"
+    ],
+    "leafShape": "linear",
+    "habitats": [
+      "steppe",
+      "rocks"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Плотнодерновинный степной злак.",
+    "descLeaves": "Листья щетиновидные, свёрнутые вдоль жилки.",
+    "descFlower": "Колоски собраны в узкую метёлку.",
+    "descFruit": "Зерновка мелкая, созревает летом.",
+    "habitatText": "Сухие степные склоны и каменистые участки.",
+    "features": "Хорошо переносит сухость и резкие перепады температур.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "labydya"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "pulsatilla_turczaninovii",
+    "nameRu": "Прострел Турчанинова",
+    "nameLat": "Pulsatilla turczaninovii Krylov et Serg.",
+    "family": "Лютиковые (Ranunculaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 15,
+      "max": 35
+    },
+    "flowerColors": [
+      "purple"
+    ],
+    "leafShape": "divided",
+    "habitats": [
+      "steppe",
+      "rocks"
+    ],
+    "floweringMonths": [
+      5,
+      6
+    ],
+    "fruitingMonths": [
+      6,
+      7
+    ],
+    "descGeneral": "Ранневесенний многолетник, покрытый серебристым опушением.",
+    "descLeaves": "Листья сильно рассечённые, развиваются после цветения.",
+    "descFlower": "Цветок одиночный, колокольчатый, фиолетовый.",
+    "descFruit": "Плодики снабжены длинными перистыми остями.",
+    "habitatText": "Степные склоны и сухие каменистые участки.",
+    "features": "Цветёт сразу после схода снега; не трогать ранние побеги.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "labydya"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "delphinium_grandiflorum",
+    "nameRu": "Живокость крупноцветковая",
+    "nameLat": "Delphinium grandiflorum L.",
+    "family": "Лютиковые (Ranunculaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 20,
+      "max": 60
+    },
+    "flowerColors": [
+      "blue"
+    ],
+    "leafShape": "divided",
+    "habitats": [
+      "steppe",
+      "meadow"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Травянистое растение с прямостоячим стеблем.",
+    "descLeaves": "Листья пальчатораздельные.",
+    "descFlower": "Цветки ярко-синие, со шпорцем, собраны в рыхлую кисть.",
+    "descFruit": "Плод — листовка.",
+    "habitatText": "Степные склоны и сухие луга.",
+    "features": "Все части растения могут быть токсичны.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "labydya",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "iris_tiger",
+    "nameRu": "Ирис тигровый",
+    "nameLat": "Iris tigridia Bunge",
+    "family": "Ирисовые (Iridaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 20,
+      "max": 60
+    },
+    "flowerColors": [
+      "purple"
+    ],
+    "leafShape": "linear",
+    "habitats": [
+      "meadow",
+      "riverbank"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Корневищный многолетник с мечевидными листьями.",
+    "descLeaves": "Листья плоские, линейные, собраны веером.",
+    "descFlower": "Цветки фиолетовые с контрастными пятнами.",
+    "descFruit": "Плод — трёхгранная коробочка.",
+    "habitatText": "Влажные луга и пойменные участки.",
+    "features": "Предпочитает освещённые места с умеренно влажной почвой.",
+    "parkZones": [
+      "labydya",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "lilium_pensylvanicum",
+    "nameRu": "Лилия пенсильванская",
+    "nameLat": "Lilium pensylvanicum Ker Gawl.",
+    "family": "Лилейные (Liliaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 30,
+      "max": 80
+    },
+    "flowerColors": [
+      "red",
+      "yellow"
+    ],
+    "leafShape": "linear",
+    "habitats": [
+      "forest",
+      "meadow"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Луковичное растение с одиночным или несколькими цветками.",
+    "descLeaves": "Листья многочисленные, узколинейные.",
+    "descFlower": "Цветки оранжево-красные с тёмными пятнами, направлены вверх.",
+    "descFruit": "Плод — коробочка.",
+    "habitatText": "Лесные поляны, луга и опушки.",
+    "features": "Луковицы повреждаются при вытаптывании почвы.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "tulipa_schrenkii",
+    "nameRu": "Тюльпан Шренка",
+    "nameLat": "Tulipa schrenkii Regel",
+    "family": "Лилейные (Liliaceae)",
+    "statusRf": "2",
+    "statusRsya": "2",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 20,
+      "max": 45
+    },
+    "flowerColors": [
+      "red",
+      "yellow",
+      "white"
+    ],
+    "leafShape": "linear",
+    "habitats": [
+      "steppe",
+      "sand"
+    ],
+    "floweringMonths": [
+      5,
+      6
+    ],
+    "fruitingMonths": [
+      6,
+      7
+    ],
+    "descGeneral": "Луковичный эфемероид с одиночным крупным цветком.",
+    "descLeaves": "Листья сизоватые, широколинейные, немного волнистые.",
+    "descFlower": "Окраска цветка варьирует от белой до красной и жёлтой.",
+    "descFruit": "Плод — коробочка с плоскими семенами.",
+    "habitatText": "Степи и песчаные склоны.",
+    "features": "Цветёт недолго; сбор луковиц запрещён.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "saamys_kumaga"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "juniperus_sibirica",
+    "nameRu": "Можжевельник сибирский",
+    "nameLat": "Juniperus sibirica Burgsd.",
+    "family": "Кипарисовые (Cupressaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "shrub",
+    "heightCm": {
+      "min": 30,
+      "max": 150
+    },
+    "flowerColors": [
+      "none"
+    ],
+    "leafShape": "needle",
+    "habitats": [
+      "forest",
+      "rocks"
+    ],
+    "floweringMonths": [
+      4,
+      5
+    ],
+    "fruitingMonths": [
+      9,
+      10
+    ],
+    "descGeneral": "Низкий хвойный кустарник.",
+    "descLeaves": "Хвоя игольчатая, жёсткая, собрана по три.",
+    "descFlower": "Цветки невзрачные, растение однодомное.",
+    "descFruit": "Шишкоягоды округлые, тёмно-синие при созревании.",
+    "habitatText": "Каменистые склоны и редкостойные леса.",
+    "features": "Растёт медленно, ветви легко ломаются.",
+    "parkZones": [
+      "labydya",
+      "diring"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "dryas_octopetala",
+    "nameRu": "Дриада восьмилепестная",
+    "nameLat": "Dryas octopetala L.",
+    "family": "Розовые (Rosaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "subshrub",
+    "heightCm": {
+      "min": 5,
+      "max": 15
+    },
+    "flowerColors": [
+      "white"
+    ],
+    "leafShape": "oval",
+    "habitats": [
+      "rocks",
+      "steppe"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Низкий вечнозелёный кустарничек с древеснеющими побегами.",
+    "descLeaves": "Листья кожистые, сверху тёмные, снизу беловойлочные.",
+    "descFlower": "Цветки белые, обычно с восемью лепестками.",
+    "descFruit": "Плодики с длинными перистыми остями.",
+    "habitatText": "Известняковые скалы и каменистые тундроподобные участки.",
+    "features": "Арктико-альпийский реликтовый вид.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "kysyl_eles"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "potentilla_juniperina",
+    "nameRu": "Лапчатка можжевельниковая",
+    "nameLat": "Potentilla juniperina Delarb.",
+    "family": "Розовые (Rosaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "subshrub",
+    "heightCm": {
+      "min": 5,
+      "max": 20
+    },
+    "flowerColors": [
+      "yellow"
+    ],
+    "leafShape": "compound",
+    "habitats": [
+      "rocks",
+      "steppe"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Низкий кустарничек с многочисленными побегами.",
+    "descLeaves": "Листья пальчатосложные, листочки узкие.",
+    "descFlower": "Цветки жёлтые, одиночные или по два.",
+    "descFruit": "Плодики многочисленные, сухие.",
+    "habitatText": "Сухие скалы, осыпи и степные склоны.",
+    "features": "Плотные дернинки защищают почву от эрозии.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "kysyl_eles"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "saussurea_lenensis",
+    "nameRu": "Соссюрея ленская",
+    "nameLat": "Saussurea lenensis Ledeb.",
+    "family": "Астровые (Asteraceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 15,
+      "max": 40
+    },
+    "flowerColors": [
+      "purple"
+    ],
+    "leafShape": "lanceolate",
+    "habitats": [
+      "rocks",
+      "riverbank"
+    ],
+    "floweringMonths": [
+      7,
+      8
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Многолетник с прикорневой розеткой и одиночными корзинками.",
+    "descLeaves": "Листья продолговатые, снизу серовойлочные.",
+    "descFlower": "Корзинка пурпурная, состоит из трубчатых цветков.",
+    "descFruit": "Семянки с хохолком.",
+    "habitatText": "Каменистые склоны и галечники рек.",
+    "features": "Узкоареальный вид, требующий бережного наблюдения.",
+    "parkZones": [
+      "labydya",
+      "diring",
+      "buotama"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "orobanche_coerulescens",
+    "nameRu": "Заразиха синеватая",
+    "nameLat": "Orobanche coerulescens Stephan",
+    "family": "Заразиховые (Orobanchaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 15,
+      "max": 45
+    },
+    "flowerColors": [
+      "blue"
+    ],
+    "leafShape": "reduced",
+    "habitats": [
+      "steppe",
+      "sand"
+    ],
+    "floweringMonths": [
+      6,
+      7
+    ],
+    "fruitingMonths": [
+      7,
+      8
+    ],
+    "descGeneral": "Паразитическое растение без зелёных листьев.",
+    "descLeaves": "Листья редуцированы до чешуек.",
+    "descFlower": "Цветки трубчатые, синевато-фиолетовые, в плотном соцветии.",
+    "descFruit": "Плод — коробочка с мельчайшими семенами.",
+    "habitatText": "Сухие степи и пески, на корнях растений-хозяев.",
+    "features": "Не выкапывать: подземная часть связана с растением-хозяином.",
+    "parkZones": [
+      "diring",
+      "kysyl_eles",
+      "saamys_kumaga"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  },
+  {
+    "id": "goodyera_repens",
+    "nameRu": "Гудайера ползучая",
+    "nameLat": "Goodyera repens (L.) R.Br.",
+    "family": "Орхидные (Orchidaceae)",
+    "statusRf": "3",
+    "statusRsya": "3",
+    "lifeForm": "herb",
+    "heightCm": {
+      "min": 10,
+      "max": 30
+    },
+    "flowerColors": [
+      "white"
+    ],
+    "leafShape": "oval",
+    "habitats": [
+      "forest"
+    ],
+    "floweringMonths": [
+      7,
+      8
+    ],
+    "fruitingMonths": [
+      8,
+      9
+    ],
+    "descGeneral": "Небольшая вечнозелёная орхидея с ползучим корневищем.",
+    "descLeaves": "Листья овальные, с серебристой сеткой жилок.",
+    "descFlower": "Цветки белые, собраны в спиральный колос.",
+    "descFruit": "Плод — мелкая коробочка.",
+    "habitatText": "Мшистые хвойные леса.",
+    "features": "Очень чувствительна к вытаптыванию лесной подстилки.",
+    "parkZones": [
+      "labydya",
+      "diring"
+    ],
+    "photos": [],
+    "sources": [
+      "Красная книга Российской Федерации",
+      "Красная книга Республики Саха (Якутия)"
+    ],
+    "confidence": "medium"
+  }
+]
