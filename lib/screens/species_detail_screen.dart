@@ -5,9 +5,10 @@ import '../data/content_repository.dart';
 import '../models/labels.dart';
 import '../models/species.dart';
 import '../state/progress_controller.dart';
+import '../state/session_controller.dart';
+import '../theme/flora_theme.dart';
+import '../widgets/flora_nav_bar.dart';
 import '../widgets/plant_sketch.dart';
-import '../widgets/species_image.dart';
-import 'report_screen.dart';
 
 class SpeciesDetailScreen extends StatelessWidget {
   final Species species;
@@ -15,289 +16,217 @@ class SpeciesDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final progress = context.watch<ProgressController>();
     final zones = context.read<ContentRepository>().map.zones;
-    final s = species;
-    final identified = progress.identified.contains(s.id);
-    final seen = progress.seen.containsKey(s.id);
-    final zoneNames = zones.where((z) => s.parkZones.contains(z.id)).map((z) => z.name).toList();
+    final saved = progress.seen.containsKey(species.id);
+    final zoneNames = zones.where((zone) => species.parkZones.contains(zone.id)).map((zone) => zone.name).toList();
+    final book = species.statusRf != null || species.statusRsya != null;
 
     return Scaffold(
-      body: CustomScrollView(slivers: [
-        SliverAppBar(
-          expandedHeight: 300,
-          pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
-            background: Hero(tag: 'sp_${s.id}', child: SpeciesThumb(species: s)),
+      backgroundColor: cream,
+      bottomNavigationBar: FloraNavBar(
+        index: 1,
+        onTap: (index) {
+          context.read<SessionController>().selectTab(index);
+          Navigator.pop(context);
+        },
+      ),
+      body: ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 20), children: [
+        SizedBox(
+          height: 280,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28),
+            child: Stack(fit: StackFit.expand, children: [
+              _Gallery(species: species),
+              Positioned(
+                left: 12,
+                top: 12,
+                child: _RoundButton(
+                  icon: Icons.arrow_back,
+                  onTap: () => Navigator.pop(context),
+                ),
+              ),
+              Positioned(
+                right: 12,
+                top: 12,
+                child: _RoundButton(
+                  icon: saved ? Icons.favorite : Icons.favorite_border,
+                  onTap: () => progress.toggleSeen(species.id),
+                ),
+              ),
+            ]),
           ),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.all(16),
-          sliver: SliverList.list(children: [
-            Text(s.nameRu, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-            Text(s.nameLat, style: theme.textTheme.titleMedium?.copyWith(fontStyle: FontStyle.italic)),
-            const SizedBox(height: 4),
-            Text('Семейство: ${s.family}', style: theme.textTheme.bodyLarge),
-            const SizedBox(height: 12),
-            _StatusCard(species: s),
-            if (identified)
-              const Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Chip(
-                  avatar: Icon(Icons.verified, color: Color(0xFF2E7D32)),
-                  label: Text('Вы определили этот вид'),
-                ),
-              ),
-            const SizedBox(height: 8),
-            Row(children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  icon: Icon(seen ? Icons.check_box : Icons.check_box_outline_blank),
-                  label: Text(seen ? 'В чек-листе' : 'Отметить встречу'),
-                  onPressed: () => progress.toggleSeen(s.id),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.icon(
-                  icon: const Icon(Icons.add_location_alt_outlined),
-                  label: const Text('Сообщить'),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => ReportScreen(initialSpeciesId: s.id)),
-                  ),
-                ),
-              ),
+        const SizedBox(height: 16),
+        Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(species.nameRu, style: const TextStyle(fontFamily: floraDisplay, fontSize: 32, height: 1.05)),
+              Text(species.nameLat, style: const TextStyle(fontStyle: FontStyle.italic, color: moss, fontSize: 16)),
             ]),
-            if (s.photos.isNotEmpty) ...[
-              _Section('Фотографии'),
-              SizedBox(
-                height: 160,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: s.photos.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (_, i) => _PhotoTile(photo: s.photos[i]),
-                ),
-              ),
-            ],
-            _Section('Схема для определения'),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: PlantSketch(species: s, height: 200),
+          ),
+          if (book)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(color: chipRed, borderRadius: BorderRadius.circular(12)),
+              child: const Text('Красная книга', style: TextStyle(color: chipRedText, fontWeight: FontWeight.w700, fontSize: 12)),
             ),
-            const SizedBox(height: 8),
-            Wrap(spacing: 8, runSpacing: 8, children: [
-              _Trait(Icons.straighten, '${s.heightMin}–${s.heightMax} см'),
-              _Trait(Icons.eco_outlined, leafShapeLabels[s.leafShape] ?? s.leafShape),
-              for (final c in s.flowerColors)
-                Chip(
-                  avatar: CircleAvatar(backgroundColor: flowerColorSwatches[c], radius: 8),
-                  label: Text(flowerColorLabels[c] ?? c),
-                ),
-            ]),
-            _Section('Описание'),
-            _Para(s.descGeneral),
-            _Labeled('Листья', s.descLeaves),
-            _Labeled('Цветок', s.descFlower),
-            _Labeled('Плод', s.descFruit),
-            _Section('Где растёт'),
-            _Para(s.habitatText),
-            Wrap(spacing: 8, runSpacing: 8, children: [
-              for (final h in s.habitats) _Trait(Icons.terrain, habitatLabels[h] ?? h),
-            ]),
-            if (zoneNames.isNotEmpty) _Labeled('Зоны парка', zoneNames.join(', ')),
-            _Section('Сроки'),
-            _Labeled('Цветение', monthsRange(s.floweringMonths)),
-            _Labeled('Плодоношение', monthsRange(s.fruitingMonths)),
-            _MonthsBar(flowering: s.floweringMonths, fruiting: s.fruitingMonths),
-            if (s.features.isNotEmpty) ...[
-              _Section('Особенности вида'),
-              _Para(s.features),
-            ],
-            const SizedBox(height: 16),
-            Card(
-              color: theme.colorScheme.errorContainer,
-              child: const Padding(
-                padding: EdgeInsets.all(12),
-                child: Row(children: [
-                  Icon(Icons.do_not_touch_outlined),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text('Растение охраняется законом. Не срывайте и не выкапывайте его — только фото.'),
-                  ),
-                ]),
-              ),
-            ),
-            if (s.confidence != 'high') ...[
-              const SizedBox(height: 8),
-              Text('Примечание: ${confidenceLabels[s.confidence] ?? ''}.',
-                  style: theme.textTheme.bodySmall),
-            ],
-            const SizedBox(height: 32),
-          ]),
-        ),
-      ]),
-    );
-  }
-}
-
-class _StatusCard extends StatelessWidget {
-  final Species species;
-  const _StatusCard({required this.species});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: const Color(0xFFFFEBEE),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('Охранный статус', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFFB71C1C))),
-          const SizedBox(height: 4),
-          Text('Красная книга РФ: ${species.statusRf ?? 'не включён'}'),
-          Text('Красная книга РС(Я): ${species.statusRsya ?? 'не включён'}'),
         ]),
-      ),
-    );
-  }
-}
-
-class _PhotoTile extends StatelessWidget {
-  final SpeciesPhoto photo;
-  const _PhotoTile({required this.photo});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => showDialog(
-        context: context,
-        builder: (_) => Dialog(
-          child: Column(mainAxisSize: MainAxisSize.min, children: [
-            InteractiveViewer(child: Image.asset(photo.asset)),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text([photo.kindLabel, if (photo.credit != null) 'Фото: ${photo.credit}'].join(' · ')),
-            ),
-          ]),
-        ),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Stack(children: [
-          Image.asset(photo.asset, width: 160, height: 160, fit: BoxFit.cover, cacheWidth: 400),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.black45,
-              padding: const EdgeInsets.all(4),
-              child: Text(photo.kindLabel, style: const TextStyle(color: Colors.white)),
-            ),
-          ),
-        ]),
-      ),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  final String text;
-  const _Section(this.text);
-
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(top: 24, bottom: 8),
-        child: Text(text, style: Theme.of(context).textTheme.titleLarge),
-      );
-}
-
-class _Para extends StatelessWidget {
-  final String text;
-  const _Para(this.text);
-
-  @override
-  Widget build(BuildContext context) => text.isEmpty
-      ? const SizedBox.shrink()
-      : Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
-        );
-}
-
-class _Labeled extends StatelessWidget {
-  final String label;
-  final String text;
-  const _Labeled(this.label, this.text);
-
-  @override
-  Widget build(BuildContext context) => text.isEmpty
-      ? const SizedBox.shrink()
-      : Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text.rich(
-            TextSpan(children: [
-              TextSpan(text: '$label: ', style: const TextStyle(fontWeight: FontWeight.bold)),
-              TextSpan(text: text),
-            ]),
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        );
-}
-
-class _Trait extends StatelessWidget {
-  final IconData icon;
-  final String text;
-  const _Trait(this.icon, this.text);
-
-  @override
-  Widget build(BuildContext context) => Chip(avatar: Icon(icon, size: 18), label: Text(text));
-}
-
-class _MonthsBar extends StatelessWidget {
-  final List<int> flowering;
-  final List<int> fruiting;
-  const _MonthsBar({required this.flowering, required this.fruiting});
-
-  @override
-  Widget build(BuildContext context) {
-    const shown = [4, 5, 6, 7, 8, 9];
-    return Padding(
-      padding: const EdgeInsets.only(top: 4),
-      child: Column(children: [
+        const SizedBox(height: 14),
         Row(children: [
-          for (final m in shown)
+          Expanded(child: _Fact(species.familyShort.isEmpty ? '—' : species.familyShort, 'Семейство')),
+          const SizedBox(width: 8),
+          Expanded(child: _Fact(
+            species.heightMin == null || species.heightMax == null
+                ? 'не указана'
+                : '${species.heightMin}–${species.heightMax} см',
+            'Высота',
+          )),
+          const SizedBox(width: 8),
+          Expanded(child: _Fact(monthsRange(species.floweringMonths), 'Цветение')),
+        ]),
+        const SizedBox(height: 12),
+        _InfoCard(icon: Icons.notes_outlined, title: 'Описание', text: species.descGeneral),
+        _InfoCard(icon: Icons.park_outlined, title: 'Местообитание', text: species.habitatText.isEmpty ? _habitats(species) : species.habitatText),
+        if (species.features.isNotEmpty) _InfoCard(icon: Icons.eco_outlined, title: 'Особенности', text: species.features),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(color: paper, borderRadius: BorderRadius.circular(22)),
+          child: Row(children: [
             Expanded(
-              child: Column(children: [
-                Text(monthNames[m - 1].substring(0, 3), style: const TextStyle(fontSize: 13)),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Text('Где встречается', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                 const SizedBox(height: 4),
-                Container(height: 14, margin: const EdgeInsets.symmetric(horizontal: 2),
-                    color: flowering.contains(m) ? const Color(0xFFE57399) : const Color(0xFFEEEEEE)),
-                const SizedBox(height: 3),
-                Container(height: 14, margin: const EdgeInsets.symmetric(horizontal: 2),
-                    color: fruiting.contains(m) ? const Color(0xFF8D6E63) : const Color(0xFFEEEEEE)),
+                Text(
+                  zoneNames.isEmpty
+                      ? 'Отдельная точка на схеме парка не отмечена.'
+                      : zoneNames.join(', '),
+                  style: const TextStyle(color: moss, height: 1.3),
+                ),
               ]),
             ),
-        ]),
-        const SizedBox(height: 6),
-        const Row(children: [
-          _Legend(Color(0xFFE57399), 'цветение'),
-          SizedBox(width: 16),
-          _Legend(Color(0xFF8D6E63), 'плоды'),
-        ]),
+            const SizedBox(width: 12),
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(color: const Color(0xFFE7F0E2), borderRadius: BorderRadius.circular(18)),
+              child: const Icon(Icons.place_outlined, color: forest, size: 32),
+            ),
+          ]),
+        ),
+        const SizedBox(height: 16),
+        FilledButton.icon(
+          onPressed: () => progress.toggleSeen(species.id),
+          icon: Icon(saved ? Icons.check : Icons.add),
+          label: Text(saved ? 'В коллекции' : 'Добавить в коллекцию'),
+        ),
+      ]),
+    );
+  }
+
+  static String _habitats(Species species) =>
+      species.habitats.map((item) => habitatLabels[item] ?? item).join(', ');
+}
+
+class _Gallery extends StatefulWidget {
+  final Species species;
+  const _Gallery({required this.species});
+
+  @override
+  State<_Gallery> createState() => _GalleryState();
+}
+
+class _GalleryState extends State<_Gallery> {
+  int _page = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final photos = widget.species.photos;
+    if (photos.isEmpty) return PlantSketch(species: widget.species);
+    return Stack(fit: StackFit.expand, children: [
+      PageView.builder(
+        itemCount: photos.length,
+        onPageChanged: (value) => setState(() => _page = value),
+        itemBuilder: (_, index) => Image.asset(
+          photos[index].asset,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => PlantSketch(species: widget.species),
+        ),
+      ),
+      if (photos.length > 1)
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: Text('${_page + 1}/${photos.length}', style: const TextStyle(color: Colors.white)),
+        ),
+    ]);
+  }
+}
+
+class _RoundButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _RoundButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xCCFFFFFF),
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: SizedBox(width: 40, height: 40, child: Icon(icon, color: ink)),
+      ),
+    );
+  }
+}
+
+class _Fact extends StatelessWidget {
+  final String value;
+  final String label;
+  const _Fact(this.value, this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      decoration: BoxDecoration(color: paper, borderRadius: BorderRadius.circular(16)),
+      child: Column(children: [
+        Text(value, textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w700)),
+        Text(label, style: const TextStyle(fontSize: 12, color: moss)),
       ]),
     );
   }
 }
 
-class _Legend extends StatelessWidget {
-  final Color color;
+class _InfoCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
   final String text;
-  const _Legend(this.color, this.text);
+  const _InfoCard({required this.icon, required this.title, required this.text});
 
   @override
-  Widget build(BuildContext context) =>
-      Row(children: [Container(width: 14, height: 14, color: color), const SizedBox(width: 6), Text(text)]);
+  Widget build(BuildContext context) {
+    if (text.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(color: paper, borderRadius: BorderRadius.circular(20)),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Icon(icon, color: forest, size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w800)),
+              const SizedBox(height: 2),
+              Text(text, style: const TextStyle(height: 1.3, color: Color(0xFF3E5348))),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
 }

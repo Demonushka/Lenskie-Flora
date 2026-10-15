@@ -6,10 +6,14 @@ import 'package:provider/provider.dart';
 import '../data/content_repository.dart';
 import '../models/species.dart';
 import '../services/location_service.dart';
+import '../state/observation_controller.dart';
+import 'inspector_home_screen.dart';
 import 'species_detail_screen.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final bool showOwnPoints;
+  final List<FieldNote> pins;
+  const MapScreen({super.key, this.showOwnPoints = false, this.pins = const []});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -18,6 +22,13 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   Offset? _me;
   bool _locating = false;
+  String? _gpsNote;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _locate());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,21 +36,29 @@ class _MapScreenState extends State<MapScreen> {
     final map = repo.map;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Карта-схема парка')),
-      floatingActionButton: map.approximate
-          ? null
-          : FloatingActionButton(
-              tooltip: 'Где я?',
-              onPressed: _locating ? null : _locate,
-              child: _locating ? const CircularProgressIndicator() : const Icon(Icons.my_location),
-            ),
+      appBar: AppBar(title: const Text('Карта парка')),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Где я?',
+        onPressed: _locating ? null : _locate,
+        child: _locating ? const CircularProgressIndicator() : const Icon(Icons.my_location),
+      ),
       body: Column(children: [
-        if (map.approximate)
-          const MaterialBanner(
-            content: Text('Схема приблизительная и не предназначена для навигации. '
-                'Места произрастания показаны с точностью до туристской зоны.'),
-            leading: Icon(Icons.info_outline),
-            actions: [SizedBox.shrink()],
+        if (_gpsNote != null)
+          MaterialBanner(
+            content: Text(_gpsNote!),
+            leading: const Icon(Icons.my_location),
+            actions: const [SizedBox.shrink()],
+          )
+        else if (map.approximate)
+          MaterialBanner(
+            content: Text(
+              widget.showOwnPoints
+                  ? 'Схема показывает туристские зоны. Цветные точки — только ваши записи, на картах туриста и гида их нет.'
+                  : 'Схема показывает туристские зоны, без точных точек редких растений. '
+                      'Кнопка геолокации определяет, где вы сейчас.',
+            ),
+            leading: const Icon(Icons.info_outline),
+            actions: const [SizedBox.shrink()],
           ),
         Expanded(
           child: LayoutBuilder(builder: (context, c) {
@@ -56,6 +75,7 @@ class _MapScreenState extends State<MapScreen> {
                     proj: proj,
                     counts: {for (final z in map.zones) z.id: repo.inZone(z.id).length},
                     me: _me,
+                    pins: widget.pins,
                     textScaler: MediaQuery.textScalerOf(context),
                   ),
                 ),
@@ -86,6 +106,15 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _onTap(Offset p, _Projection proj, ContentRepository repo) {
+    for (final pin in widget.pins) {
+      final lat = pin.lat;
+      final lon = pin.lon;
+      if (lat == null || lon == null) continue;
+      if ((proj.toScreen(lat, lon) - p).distance < 18) {
+        _showPin(pin, repo);
+        return;
+      }
+    }
     for (final z in repo.map.zones) {
       if ((proj.toScreen(z.lat, z.lon) - p).distance < 36) {
         _showZone(z, repo.inZone(z.id));
@@ -98,8 +127,27 @@ class _MapScreenState extends State<MapScreen> {
     setState(() => _locating = true);
     final r = await LocationService.current();
     if (!mounted) return;
+    String? note;
+    if (r.position != null) {
+      final map = context.read<ContentRepository>().map;
+      final lat = r.position!.latitude;
+      final lon = r.position!.longitude;
+      ParkZone? nearest;
+      var best = double.infinity;
+      for (final zone in map.zones) {
+        final km = _km(lat, lon, zone.lat, zone.lon);
+        if (km < best) {
+          best = km;
+          nearest = zone;
+        }
+      }
+      final place = nearest == null ? '' : ' Ближайшая зона — ${nearest.name}, ${best.toStringAsFixed(best < 10 ? 1 : 0)} км.';
+      note = 'GPS: ${lat.toStringAsFixed(5)}, ${lon.toStringAsFixed(5)}.$place '
+          'Точки редких растений на карте не показываются.';
+    }
     setState(() {
       _locating = false;
+      _gpsNote = note;
       if (r.position != null) _me = Offset(r.position!.longitude, r.position!.latitude);
     });
     if (r.error != null) {
@@ -134,6 +182,47 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
+
+  void _showPin(FieldNote pin, ContentRepository repo) {
+    final species = pin.speciesId == null ? null : repo.byId(pin.speciesId!);
+    final title = pin.isPlant ? (species?.nameRu ?? 'Наблюдение') : pin.kindLabel;
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 28),
+        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(title, style: Theme.of(context).textTheme.titleLarge),
+          if (pin.text.isNotEmpty) Padding(padding: const EdgeInsets.only(top: 8), child: Text(pin.text)),
+          const SizedBox(height: 12),
+          FilledButton(
+            onPressed: () {
+              final host = this.context;
+              Navigator.pop(context);
+              Navigator.push(host, MaterialPageRoute(builder: (_) => InspectorCaptureScreen(note: pin)));
+            },
+            child: const Text('Изменить'),
+          ),
+          if (species != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: TextButton(
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SpeciesDetailScreen(species: species))),
+                child: const Text('Карточка вида'),
+              ),
+            ),
+        ]),
+      ),
+    );
+  }
+}
+
+double _km(double lat1, double lon1, double lat2, double lon2) {
+  const earth = 6371.0;
+  final dLat = (lat2 - lat1) * pi / 180;
+  final dLon = (lon2 - lon1) * pi / 180;
+  final a = sin(dLat / 2) * sin(dLat / 2) + cos(lat1 * pi / 180) * cos(lat2 * pi / 180) * sin(dLon / 2) * sin(dLon / 2);
+  return 2 * earth * asin(sqrt(a));
 }
 
 class _Projection {
@@ -168,9 +257,10 @@ class _MapPainter extends CustomPainter {
   final _Projection proj;
   final Map<String, int> counts;
   final Offset? me;
+  final List<FieldNote> pins;
   final TextScaler textScaler;
 
-  _MapPainter({required this.map, required this.proj, required this.counts, this.me, required this.textScaler});
+  _MapPainter({required this.map, required this.proj, required this.counts, this.me, this.pins = const [], required this.textScaler});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -217,6 +307,21 @@ class _MapPainter extends CustomPainter {
         canvas.drawCircle(p, 6, Paint()..color = const Color(0xFF2563EB));
       }
     }
+
+    for (final pin in pins) {
+      final lat = pin.lat;
+      final lon = pin.lon;
+      if (lat == null || lon == null) continue;
+      final p = proj.toScreen(lat, lon);
+      if (!(Offset.zero & size).contains(p)) continue;
+      final color = switch (pin.kind) {
+        'plant' => const Color(0xFF1B4636),
+        'problem' => const Color(0xFF8E3D3A),
+        _ => const Color(0xFFB08968),
+      };
+      canvas.drawCircle(p, 8, Paint()..color = Colors.white);
+      canvas.drawCircle(p, 5, Paint()..color = color);
+    }
   }
 
   void _label(Canvas canvas, Offset center, String text, TextStyle style) {
@@ -230,5 +335,5 @@ class _MapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MapPainter old) => old.me != me || old.counts != counts;
+  bool shouldRepaint(covariant _MapPainter old) => old.me != me || old.counts != counts || old.pins.length != pins.length;
 }

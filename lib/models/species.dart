@@ -28,8 +28,8 @@ class Species {
   final String? statusRf;
   final String? statusRsya;
   final String lifeForm;
-  final int heightMin;
-  final int heightMax;
+  final int? heightMin;
+  final int? heightMax;
   final List<String> flowerColors;
   final String leafShape;
   final List<String> habitats;
@@ -87,8 +87,8 @@ class Species {
       statusRf: j['statusRf'] as String?,
       statusRsya: j['statusRsya'] as String?,
       lifeForm: (j['lifeForm'] as String?) ?? 'herb',
-      heightMin: (height['min'] as num?)?.toInt() ?? 0,
-      heightMax: (height['max'] as num?)?.toInt() ?? 0,
+      heightMin: (height['min'] as num?)?.toInt(),
+      heightMax: (height['max'] as num?)?.toInt(),
       flowerColors: strings('flowerColors'),
       leafShape: (j['leafShape'] as String?) ?? 'lanceolate',
       habitats: strings('habitats'),
@@ -114,11 +114,16 @@ class Species {
     return (i > 0 ? family.substring(0, i) : family).trim();
   }
 
-  List<String> get heightClasses => [
-        if (heightMin < 15) 'low',
-        if (heightMin <= 50 && heightMax >= 15) 'mid',
-        if (heightMax > 50) 'high',
-      ];
+  List<String> get heightClasses {
+    final min = heightMin;
+    final max = heightMax;
+    if (min == null || max == null) return const ['low', 'mid', 'high'];
+    return [
+      if (min < 15) 'low',
+      if (min <= 50 && max >= 15) 'mid',
+      if (max > 50) 'high',
+    ];
+  }
 }
 
 class ParkZone {

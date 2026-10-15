@@ -86,6 +86,7 @@ void main() {
       final key = IdentificationKey(all, month: 6)..answer('flowering', 'no');
       for (var q = key.nextQuestion(); q != null; q = key.nextQuestion()) {
         expect(q.trait, isNot('flowerColor'));
+        expect(q.trait, isNot('colorCount'));
         key.answer(q.trait, unknownAnswer);
       }
     });
@@ -124,9 +125,32 @@ void main() {
       species = raw.map((e) => Species.fromJson(e as Map<String, dynamic>)).toList();
     });
 
-    test('contains 22 species with unique ids', () {
-      expect(species.length, 22);
-      expect(species.map((s) => s.id).toSet().length, 22);
+    test('contains the red-book cards and no species outside that set', () {
+      expect(species.map((s) => s.id).toSet(), {
+        'redowskia_sophiifolia',
+        'adonis_sibirica',
+        'cypripedium_macranthos',
+        'cypripedium_calceolus',
+        'cypripedium_guttatum',
+        'phlojodicarpus_sibiricus',
+        'delphinium_grandiflorum',
+        'neottia_camtschatea',
+        'polygala_sibirica',
+        'calypso_bulbosa',
+        'iris_laevigata',
+        'nuphar_pumila',
+        'nymphaea_tetragona',
+        'lilium_pensylvanicum',
+        'allium_ramosum',
+        'allium_prostratum',
+        'platanthera_oligantha',
+        'papaver_jacuticum',
+        'dactylorhiza_fuchsii',
+        'parietaria_debilis',
+        'gastrolychnis_saxatilis',
+        'koeleria_skrjabinii',
+        'ephedra_monosperma',
+      });
     });
 
     test('trait codes are valid', () {
@@ -140,7 +164,12 @@ void main() {
         expect(habitatLabels.keys, containsAll(s.habitats), reason: s.id);
         expect(zones, containsAll(s.parkZones), reason: s.id);
         expect(s.habitats, isNotEmpty, reason: s.id);
-        expect(s.heightMax, greaterThanOrEqualTo(s.heightMin), reason: s.id);
+        if (s.heightMin == null || s.heightMax == null) {
+          expect(s.heightMin, isNull, reason: s.id);
+          expect(s.heightMax, isNull, reason: s.id);
+        } else {
+          expect(s.heightMax!, greaterThanOrEqualTo(s.heightMin!), reason: s.id);
+        }
         expect([...s.floweringMonths, ...s.fruitingMonths].every((m) => m >= 1 && m <= 12), isTrue, reason: s.id);
         expect(s.statusRf != null || s.statusRsya != null, isTrue, reason: '${s.id}: нет охранного статуса');
         for (final p in s.photos) {
@@ -158,7 +187,30 @@ void main() {
           final q = key.nextQuestion()!;
           key.answer(q.trait, key.valuesOf(target, q.trait).first);
         }
-        expect(key.candidates.map((s) => s.id), contains(target.id), reason: target.id);
+        expect(key.candidates.map((s) => s.id), [target.id], reason: target.id);
+      }
+    });
+
+    test('every truthful answer still ends on that one species', () {
+      void walk(Species target, IdentificationKey key) {
+        final question = key.nextQuestion();
+        if (question == null) {
+          expect(key.candidates.map((s) => s.id), [target.id], reason: '${target.id} ${key.answers}');
+          return;
+        }
+        final choices = key.valuesOf(target, question.trait).where((value) => question.options.any((option) => option.value == value));
+        expect(choices, isNotEmpty, reason: '${target.id} ${question.trait}');
+        for (final choice in choices) {
+          final next = IdentificationKey(species, month: key.month)..answers.addAll(key.answers);
+          next.answer(question.trait, choice);
+          walk(target, next);
+        }
+      }
+
+      for (final month in [1, 6, 10]) {
+        for (final target in species) {
+          walk(target, IdentificationKey(species, month: month));
+        }
       }
     });
   });

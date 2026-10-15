@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import '../data/local_store.dart';
+import '../services/achievement_sound.dart';
 
 class Level {
   final String title;
@@ -40,6 +43,13 @@ class Points {
   static const quizCorrect = 3;
 }
 
+class AchievementNotice {
+  final String title;
+  final String description;
+
+  const AchievementNotice({required this.title, required this.description});
+}
+
 class ProgressController extends ChangeNotifier {
   static const _key = 'progress_v1';
   final LocalStore _store;
@@ -52,6 +62,7 @@ class ProgressController extends ChangeNotifier {
   int quizBest = 0;
   int quizBestTotal = 0;
   int quizAttempts = 0;
+  final List<AchievementNotice> notices = [];
 
   ProgressController(this._store, {required this.totalSpecies}) {
     final j = _store.readJson(_key);
@@ -96,36 +107,68 @@ class ProgressController extends ChangeNotifier {
 
   bool get isFloraExpert => identified.length >= totalSpecies && totalSpecies > 0;
 
-  Future<bool> markIdentified(String speciesId) async {
+  /// Drops marks for species that are no longer in the catalog.
+  Future<void> retainSpecies(Set<String> ids) async {
+    final seenBefore = seen.length;
+    final identifiedBefore = identified.length;
+    seen.removeWhere((id, _) => !ids.contains(id));
+    identified.removeWhere((id) => !ids.contains(id));
+    if (seen.length != seenBefore || identified.length != identifiedBefore) await _save();
+  }
+
+  Future<bool> markIdentified(String speciesId, {String? nameRu}) async {
     final added = identified.add(speciesId);
-    if (added) await _save();
-    return added;
+    if (!added) return false;
+    if (isFloraExpert) {
+      _announce('Знаток флоры Ленских столбов', 'Определите все $totalSpecies видов');
+    } else if (identified.length == 1) {
+      _announce('Первый шаг', nameRu == null ? 'Определите первое растение' : 'Определён вид: $nameRu');
+    } else {
+      _announce(nameRu ?? 'Новый значок', 'Определите вид с помощью определителя');
+    }
+    await _save();
+    return true;
   }
 
   Future<void> toggleSeen(String speciesId) async {
-    if (seen.remove(speciesId) == null) {
+    final had = seen.containsKey(speciesId);
+    if (had) {
+      seen.remove(speciesId);
+    } else {
       seen[speciesId] = DateTime.now().toIso8601String();
     }
+    if (!had && seen.length == 10) _announce('Путешественник', 'Отметьте в чек-листе 10 встреченных видов');
     await _save();
   }
 
   Future<void> addReport() async {
+    final first = reportsCount == 0;
     reportsCount++;
+    if (first) _announce('Наблюдатель', 'Отправьте сообщение о находке редкого растения');
     await _save();
   }
 
   Future<void> completeSurvey(String stage) async {
-    surveyStages.add(stage);
+    final added = surveyStages.add(stage);
+    if (added && stage == 'after') _announce('Голос посетителя', 'Пройдите итоговый опрос');
     await _save();
   }
 
   Future<void> recordQuiz(int correct, int total) async {
+    final wasPerfect = quizBestTotal > 0 && quizBest == quizBestTotal;
     quizAttempts++;
     if (correct > quizBest) {
       quizBest = correct;
       quizBestTotal = total;
     }
+    final nowPerfect = quizBestTotal > 0 && quizBest == quizBestTotal;
+    if (!wasPerfect && nowPerfect) _announce('Эрудит', 'Ответьте верно на все вопросы викторины');
     await _save();
+  }
+
+  void _announce(String title, String description) {
+    notices.add(AchievementNotice(title: title, description: description));
+    unawaited(AchievementSound.play());
   }
 
   List<Achievement> achievements(Map<String, String> speciesNames) => [

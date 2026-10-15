@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Флора Ленских столбов</string>
+	<string>«Флора Ленских столбов»: карманная красная книга</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Координаты нужны, чтобы отметить место находки редкого растения для научного отдела парка.</string>
 	<key>NSCameraUsageDescription</key>
@@ -21,7 +21,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>lenskie_flora</string>
+	<string>«Флора Ленских столбов»: карманная красная книга</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

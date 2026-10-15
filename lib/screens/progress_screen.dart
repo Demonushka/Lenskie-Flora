@@ -24,7 +24,7 @@ class ProgressScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Мои успехи'),
+          title: const Text('Достижения'),
           bottom: const TabBar(tabs: [Tab(text: 'Достижения'), Tab(text: 'Чек-лист')]),
         ),
         body: TabBarView(children: [
@@ -91,20 +91,26 @@ class ProgressScreen extends StatelessWidget {
               childAspectRatio: 0.75,
               children: [
                 for (final a in perSpecies)
-                  InkWell(
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => SpeciesDetailScreen(species: repo.byId(a.speciesId!)!))),
-                    child: Column(children: [
-                      CircleAvatar(
-                        radius: 28,
-                        backgroundColor: a.unlocked ? const Color(0xFF2E6B3F) : const Color(0xFFE0E0E0),
-                        child: Icon(a.unlocked ? Icons.local_florist : Icons.lock_outline,
-                            color: a.unlocked ? Colors.white : Colors.black38),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(a.title, maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 12)),
-                    ]),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        final species = repo.byId(a.speciesId!);
+                        if (species == null) return;
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => SpeciesDetailScreen(species: species)));
+                      },
+                      child: Column(children: [
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: a.unlocked ? const Color(0xFF2E6B3F) : const Color(0xFFE0E0E0),
+                          child: Icon(a.unlocked ? Icons.local_florist : Icons.lock_outline,
+                              color: a.unlocked ? Colors.white : Colors.black38),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(a.title, maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12)),
+                      ]),
+                    ),
                   ),
               ],
             ),

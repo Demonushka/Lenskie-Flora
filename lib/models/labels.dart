@@ -6,6 +6,8 @@ const lifeFormLabels = {
   'shrub': 'Кустарник',
   'tree': 'Дерево',
   'fern': 'Папоротник',
+  'fungus': 'Гриб',
+  'moss': 'Мох',
 };
 
 const flowerColorLabels = {

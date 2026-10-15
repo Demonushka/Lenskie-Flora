@@ -7,7 +7,6 @@ import '../models/labels.dart';
 import '../models/species.dart';
 import '../state/progress_controller.dart';
 import '../widgets/species_image.dart';
-import 'key_screen.dart';
 import 'species_detail_screen.dart';
 
 class CatalogScreen extends StatefulWidget {
@@ -28,7 +27,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Редкие виды парка'),
+        title: const Text('Растения'),
         actions: [
           Badge(
             isLabelVisible: _filter.activeCount > 0,
@@ -56,15 +55,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const KeyScreen())),
-        icon: const Icon(Icons.quiz_outlined),
-        label: const Text('Пошаговый определитель'),
-      ),
       body: list.isEmpty
           ? _EmptyResult(onReset: () => setState(() => _filter = const SpeciesFilter()))
           : GridView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 12, 12, 96),
+              padding: const EdgeInsets.fromLTRB(12, 12, 12, 24),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 240,
                 childAspectRatio: 0.72,

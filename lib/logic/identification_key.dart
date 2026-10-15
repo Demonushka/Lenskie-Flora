@@ -32,7 +32,25 @@ const _traits = <String, _Trait>{
     'no': 'Нет, цветков не видно',
   }),
   'flowerColor': _Trait('Какого цвета цветки?', 'Выберите основной цвет венчика', flowerColorLabels),
-  'leafShape': _Trait('Какие у растения листья?', 'Смотрите на крупные листья у основания стебля', leafShapeLabels),
+  'colorCount': _Trait('Сколько окрасок у цветка?', 'Один основной цвет или несколько', {
+    'one': 'Одна окраска',
+    'several': 'Несколько окрасок',
+  }),
+  'bloomMonth': _Trait('В каком месяце цветёт?', 'Выберите месяц, когда у растения бывают цветки', {
+    '1': 'Январь',
+    '2': 'Февраль',
+    '3': 'Март',
+    '4': 'Апрель',
+    '5': 'Май',
+    '6': 'Июнь',
+    '7': 'Июль',
+    '8': 'Август',
+    '9': 'Сентябрь',
+    '10': 'Октябрь',
+    '11': 'Ноябрь',
+    '12': 'Декабрь',
+  }),
+  'leafShape': _Trait('Какая форма листьев?', 'Смотрите на крупный лист. Подчёркнутые слова можно нажать — откроется пояснение', leafShapeLabels),
   'height': _Trait('Какой высоты растение?', 'Оцените примерно, от земли до верхушки', heightClassLabels),
   'habitat': _Trait('Где растёт растение?', 'Выберите место, где вы его нашли', habitatLabels),
 };
@@ -54,6 +72,12 @@ class IdentificationKey {
         return [s.floweringMonths.contains(month) ? 'yes' : 'no'];
       case 'flowerColor':
         return s.flowerColors.isEmpty ? const ['none'] : s.flowerColors;
+      case 'colorCount':
+        final colors = s.flowerColors.where((color) => color != 'none').toList();
+        if (colors.isEmpty) return const ['one'];
+        return [colors.length > 1 ? 'several' : 'one'];
+      case 'bloomMonth':
+        return [for (final month in s.floweringMonths) '$month'];
       case 'leafShape':
         return [s.leafShape];
       case 'height':
@@ -78,10 +102,11 @@ class IdentificationKey {
 
   bool _applicable(String trait) {
     if (answers.containsKey(trait)) return false;
-    if (trait == 'flowerColor' && (answers['flowering'] == 'no' || answers['lifeForm'] == 'fern')) {
-      return false;
-    }
-    if (trait == 'flowering' && answers['lifeForm'] == 'fern') return false;
+    const withoutFlowers = {'fern', 'fungus', 'moss'};
+    final flowerHidden = answers['flowering'] == 'no' || withoutFlowers.contains(answers['lifeForm']);
+    if ((trait == 'flowerColor' || trait == 'colorCount') && flowerHidden) return false;
+    if ((trait == 'flowering' || trait == 'bloomMonth') && withoutFlowers.contains(answers['lifeForm'])) return false;
+    if (trait == 'leafShape' && answers['lifeForm'] == 'fungus') return false;
     return true;
   }
 

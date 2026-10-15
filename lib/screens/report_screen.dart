@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../data/content_repository.dart';
+import '../logic/park_proximity.dart';
 import '../services/location_service.dart';
 import '../state/outbox_controller.dart';
 import '../state/progress_controller.dart';
@@ -39,6 +40,7 @@ class _ReportScreenState extends State<ReportScreen> {
   bool _consent = false;
   Position? _pos;
   String? _geoError;
+  String? _block;
   bool _locating = false;
   XFile? _photo;
   bool _saving = false;
@@ -67,7 +69,46 @@ class _ReportScreenState extends State<ReportScreen> {
       _locating = false;
       _pos = r.position ?? _pos;
       _geoError = r.error;
+      _block = _reason(_pos);
     });
+  }
+
+  String? _reason(Position? position) {
+    if (position == null) return null;
+    final repo = context.read<ContentRepository>();
+    final species = _speciesId.isEmpty ? null : repo.byId(_speciesId);
+    final verdict = ParkProximity.evaluate(
+      lat: position.latitude,
+      lon: position.longitude,
+      accuracyM: position.accuracy,
+      fixTime: position.timestamp,
+      now: DateTime.now(),
+      mocked: position.isMocked,
+      map: repo.map,
+      speciesZoneIds: species?.parkZones ?? const [],
+    );
+    if (!verdict.allowed) return verdict.message;
+    final speciesId = _speciesId.isEmpty ? null : _speciesId;
+    final duplicate = ParkProximity.duplicatesNearby(
+      lat: position.latitude,
+      lon: position.longitude,
+      speciesId: speciesId,
+      now: DateTime.now(),
+      existing: [
+        for (final item in context.read<OutboxController>().items)
+          if (item.type == OutboxType.report)
+            (
+              lat: (item.payload['lat'] as num?)?.toDouble(),
+              lon: (item.payload['lon'] as num?)?.toDouble(),
+              speciesId: item.payload['speciesId'] as String?,
+              at: item.createdAt,
+            ),
+      ],
+    );
+    if (duplicate) {
+      return 'Такой цветок с этого места уже есть в списке. Повторно его добавить нельзя.';
+    }
+    return null;
   }
 
   Future<void> _pickPhoto(ImageSource source) async {
@@ -76,7 +117,7 @@ class _ReportScreenState extends State<ReportScreen> {
   }
 
   bool get _canSubmit =>
-      !_saving && _pos != null && (_contact.text.trim().isEmpty || _consent);
+      !_saving && _pos != null && _block == null && (_contact.text.trim().isEmpty || _consent);
 
   Future<void> _submit() async {
     setState(() => _saving = true);
@@ -128,7 +169,10 @@ class _ReportScreenState extends State<ReportScreen> {
             const DropdownMenuItem(value: '', child: Text('Не знаю / другой вид')),
             for (final s in species) DropdownMenuItem(value: s.id, child: Text(s.nameRu)),
           ],
-          onChanged: (v) => setState(() => _speciesId = v ?? ''),
+          onChanged: (v) => setState(() {
+            _speciesId = v ?? '';
+            _block = _reason(_pos);
+          }),
         ),
         const SizedBox(height: 16),
         Text('Состояние растения', style: theme.textTheme.titleMedium),
@@ -217,6 +261,16 @@ class _ReportScreenState extends State<ReportScreen> {
           const Padding(
             padding: EdgeInsets.only(top: 8),
             child: Text('Для отправки нужны координаты места находки.', textAlign: TextAlign.center),
+          )
+        else if (_block != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(_block!, textAlign: TextAlign.center),
+          )
+        else
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text('Вы рядом с местом находки, запись можно сохранить.', textAlign: TextAlign.center),
           ),
         const SizedBox(height: 24),
       ]),

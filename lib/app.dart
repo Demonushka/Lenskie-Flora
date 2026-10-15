@@ -1,36 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'screens/catalog_screen.dart';
+import 'screens/guide_excursions_screen.dart';
+import 'screens/guide_home_screen.dart';
+import 'screens/inspector_home_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/key_screen.dart';
 import 'screens/map_screen.dart';
-import 'screens/more_screen.dart';
-import 'screens/progress_screen.dart';
-
-const parkGreen = Color(0xFF2E6B3F);
-
-ThemeData buildTheme() {
-  final scheme = ColorScheme.fromSeed(seedColor: parkGreen);
-  return ThemeData(
-    colorScheme: scheme,
-    useMaterial3: true,
-    visualDensity: VisualDensity.standard,
-    filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        minimumSize: const Size(64, 56),
-        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-      ),
-    ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(64, 52),
-        textStyle: const TextStyle(fontSize: 17),
-      ),
-    ),
-    listTileTheme: const ListTileThemeData(minVerticalPadding: 12),
-    chipTheme: const ChipThemeData(labelStyle: TextStyle(fontSize: 16)),
-    navigationBarTheme: const NavigationBarThemeData(height: 72),
-  );
-}
+import 'screens/profile_screen.dart';
+import 'screens/role_screen.dart';
+import 'state/observation_controller.dart';
+import 'state/session_controller.dart';
+import 'theme/flora_theme.dart';
+import 'widgets/achievement_banner.dart';
+import 'widgets/flora_nav_bar.dart';
+import 'widgets/splash_gate.dart';
 
 class LenskieFloraApp extends StatelessWidget {
   const LenskieFloraApp({super.key});
@@ -38,53 +23,93 @@ class LenskieFloraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Флора Ленских столбов',
+      title: '«Флора Ленских столбов»: карманная красная книга',
       debugShowCheckedModeBanner: false,
-      theme: buildTheme(),
-      home: const HomeShell(),
+      theme: buildFloraTheme(),
+      builder: (context, child) => AchievementBannerHost(child: child ?? const SizedBox.shrink()),
+      home: const SplashGate(child: AppStart()),
     );
   }
 }
 
-class HomeShell extends StatefulWidget {
-  const HomeShell({super.key});
-
-  static void switchTab(BuildContext context, int index) =>
-      context.findAncestorStateOfType<_HomeShellState>()?.select(index);
-
-  @override
-  State<HomeShell> createState() => _HomeShellState();
-}
-
-class _HomeShellState extends State<HomeShell> {
-  int _index = 0;
-
-  void select(int i) => setState(() => _index = i);
+class AppStart extends StatelessWidget {
+  const AppStart({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final role = context.watch<SessionController>().role;
+    return switch (role) {
+      'tourist' => const TouristShell(),
+      'guide' => const GuideShell(),
+      'inspector' => const InspectorShell(),
+      _ => const RoleScreen(),
+    };
+  }
+}
+
+class InspectorShell extends StatelessWidget {
+  const InspectorShell({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final session = context.watch<SessionController>();
+    final notes = context.watch<ObservationController>().notes;
+    final pages = [
+      const InspectorHomeScreen(),
+      const InspectorNotesScreen(),
+      MapScreen(
+        showOwnPoints: true,
+        pins: [for (final note in notes) if (note.lat != null && note.lon != null) note],
+      ),
+      const InspectorNotesScreen(reports: true),
+      const ProfileScreen(),
+    ];
     return Scaffold(
-      body: IndexedStack(
-        index: _index,
-        children: const [
-          HomeScreen(),
-          CatalogScreen(),
-          MapScreen(),
-          ProgressScreen(),
-          MoreScreen(),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: select,
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Главная'),
-          NavigationDestination(icon: Icon(Icons.local_florist_outlined), selectedIcon: Icon(Icons.local_florist), label: 'Виды'),
-          NavigationDestination(icon: Icon(Icons.map_outlined), selectedIcon: Icon(Icons.map), label: 'Карта'),
-          NavigationDestination(icon: Icon(Icons.emoji_events_outlined), selectedIcon: Icon(Icons.emoji_events), label: 'Успехи'),
-          NavigationDestination(icon: Icon(Icons.menu), label: 'Ещё'),
-        ],
-      ),
+      backgroundColor: cream,
+      body: IndexedStack(index: session.tab, children: pages),
+      bottomNavigationBar: FloraNavBar(index: session.tab, onTap: session.selectTab),
+    );
+  }
+}
+
+class GuideShell extends StatelessWidget {
+  const GuideShell({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final session = context.watch<SessionController>();
+    const pages = [
+      GuideHomeScreen(),
+      CatalogScreen(),
+      GuideExcursionsScreen(),
+      MapScreen(),
+      ProfileScreen(),
+    ];
+    return Scaffold(
+      backgroundColor: cream,
+      body: IndexedStack(index: session.tab, children: pages),
+      bottomNavigationBar: FloraNavBar(index: session.tab, onTap: session.selectTab),
+    );
+  }
+}
+
+class TouristShell extends StatelessWidget {
+  const TouristShell({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final session = context.watch<SessionController>();
+    const pages = [
+      HomeScreen(),
+      CatalogScreen(),
+      KeyScreen(),
+      MapScreen(),
+      ProfileScreen(),
+    ];
+    return Scaffold(
+      backgroundColor: cream,
+      body: IndexedStack(index: session.tab, children: pages),
+      bottomNavigationBar: FloraNavBar(index: session.tab, onTap: session.selectTab),
     );
   }
 }

@@ -47,7 +47,7 @@ class _PlantPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final ground = size.height * 0.78;
     final maxH = size.height * 0.68;
-    final avg = (s.heightMin + s.heightMax) / 2;
+    final avg = ((s.heightMin ?? 20) + (s.heightMax ?? 40)) / 2;
     final plantH = maxH * (0.35 + 0.65 * (min(avg, 120) / 120));
     final cx = size.width / 2;
     final rnd = Random(s.id.hashCode);
