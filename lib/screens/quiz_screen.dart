@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../data/content_repository.dart';
 import '../logic/quiz_generator.dart';
-import '../state/outbox_controller.dart';
 import '../state/progress_controller.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -44,11 +43,6 @@ class _QuizScreenState extends State<QuizScreen> {
     }
     setState(() => _finished = true);
     await context.read<ProgressController>().recordQuiz(_correct, _questions.length);
-    if (!mounted) return;
-    await context.read<OutboxController>().add(OutboxType.quiz, {
-      'correct': _correct,
-      'total': _questions.length,
-    });
   }
 
   @override

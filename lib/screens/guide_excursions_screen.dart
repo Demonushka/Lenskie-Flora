@@ -16,6 +16,7 @@ class GuideExcursionsScreen extends StatefulWidget {
 
 class _GuideExcursionsScreenState extends State<GuideExcursionsScreen> {
   final _name = TextEditingController();
+  String? _nameError;
 
   @override
   void dispose() {
@@ -25,7 +26,11 @@ class _GuideExcursionsScreenState extends State<GuideExcursionsScreen> {
 
   Future<void> _add() async {
     final title = _name.text.trim();
-    if (title.isEmpty) return;
+    if (title.isEmpty) {
+      setState(() => _nameError = 'Требуется название экскурсии');
+      return;
+    }
+    setState(() => _nameError = null);
     final tours = context.read<ExcursionController>();
     final tour = await tours.create(title);
     if (!mounted) return;
@@ -49,10 +54,14 @@ class _GuideExcursionsScreenState extends State<GuideExcursionsScreen> {
             textCapitalization: TextCapitalization.sentences,
             decoration: InputDecoration(
               hintText: 'Название экскурсии',
+              errorText: _nameError,
               filled: true,
               fillColor: paper,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
             ),
+            onChanged: (_) {
+              if (_nameError != null) setState(() => _nameError = null);
+            },
             onSubmitted: (_) => _add(),
           ),
           const SizedBox(height: 10),

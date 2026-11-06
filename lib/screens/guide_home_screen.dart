@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../state/session_controller.dart';
 import '../theme/flora_theme.dart';
+import '../widgets/beta_mark.dart';
 import '../widgets/cover_panel.dart';
 import 'key_screen.dart';
 import 'theory_screen.dart';
@@ -42,6 +43,7 @@ class GuideHomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Positioned(top: 16, right: 16, child: BetaMark(onDark: true)),
                   ]),
                   children: [
                     CircleAvatar(
@@ -56,7 +58,7 @@ class GuideHomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Нейросеть на фото\nдля экскурсии',
+                      'Нейросеть в бете\nдля экскурсии',
                       style: TextStyle(color: Color(0xFFD5E0D4), fontSize: 15, height: 1.25),
                     ),
                   ],
@@ -116,7 +118,7 @@ class GuideHomeScreen extends StatelessWidget {
               _GuideTile(
                 image: 'assets/icons/guide_book.svg',
                 title: 'Экскурсионные\nматериалы',
-                subtitle: 'Теория для рассказа\nна маршруте',
+                subtitle: 'Теория и ваши\nматериалы',
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TheoryScreen())),
               ),
               _GuideTile(

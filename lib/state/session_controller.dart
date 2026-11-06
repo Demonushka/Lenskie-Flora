@@ -10,6 +10,8 @@ class SessionController extends ChangeNotifier {
   String displayName;
   int tab = 0;
   int identifyGeneration = 0;
+  bool handlesBack = false;
+  bool Function()? _backHandler;
 
   SessionController(this._store)
       : role = _store.readJson(_key)?['role'] as String?,
@@ -62,4 +64,13 @@ class SessionController extends ChangeNotifier {
     identifyGeneration++;
     notifyListeners();
   }
+
+  void bindBack(bool Function()? handler, {required bool handles, bool notify = true}) {
+    _backHandler = handler;
+    if (handlesBack == handles) return;
+    handlesBack = handles;
+    if (notify) notifyListeners();
+  }
+
+  bool tryBack() => _backHandler?.call() ?? false;
 }

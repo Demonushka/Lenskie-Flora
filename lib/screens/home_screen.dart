@@ -5,6 +5,7 @@ import '../data/content_repository.dart';
 import '../state/progress_controller.dart';
 import '../state/session_controller.dart';
 import '../theme/flora_theme.dart';
+import '../widgets/beta_mark.dart';
 import '../widgets/cover_panel.dart';
 import '../widgets/park_banner.dart';
 import 'collection_screen.dart';
@@ -50,6 +51,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const Positioned(top: 16, right: 16, child: BetaMark(onDark: true)),
                   ]),
                   children: [
                     CircleAvatar(
@@ -64,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Нейросеть смотрит снимок.\nЕсли не знает — вопросы',
+                      'Нейросеть в бете смотрит снимок.\nЕсли не знает — вопросы',
                       style: TextStyle(color: Color(0xFFD5E0D4), fontSize: 15, height: 1.3),
                     ),
                   ],

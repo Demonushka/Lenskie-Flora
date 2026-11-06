@@ -31,21 +31,14 @@ class SpeciesDetailScreen extends StatelessWidget {
           Navigator.pop(context);
         },
       ),
-      body: ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 20), children: [
+      body: Stack(children: [
+        ListView(padding: const EdgeInsets.fromLTRB(16, 8, 16, 20), children: [
         SizedBox(
           height: 280,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(28),
             child: Stack(fit: StackFit.expand, children: [
               _Gallery(species: species),
-              Positioned(
-                left: 12,
-                top: 12,
-                child: _RoundButton(
-                  icon: Icons.arrow_back,
-                  onTap: () => Navigator.pop(context),
-                ),
-              ),
               Positioned(
                 right: 12,
                 top: 12,
@@ -122,6 +115,16 @@ class SpeciesDetailScreen extends StatelessWidget {
           label: Text(saved ? 'В коллекции' : 'Добавить в коллекцию'),
         ),
       ]),
+        Positioned(
+          left: 20,
+          top: 16,
+          child: _RoundButton(
+            icon: Icons.arrow_back,
+            tooltip: 'Назад',
+            onTap: () => Navigator.of(context).pop(),
+          ),
+        ),
+      ]),
     );
   }
 
@@ -167,19 +170,23 @@ class _GalleryState extends State<_Gallery> {
 class _RoundButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
-  const _RoundButton({required this.icon, required this.onTap});
+  final String? tooltip;
+  const _RoundButton({required this.icon, required this.onTap, this.tooltip});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    final button = Material(
       color: const Color(0xCCFFFFFF),
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: onTap,
-        child: SizedBox(width: 40, height: 40, child: Icon(icon, color: ink)),
+        child: SizedBox(width: 44, height: 44, child: Icon(icon, color: ink)),
       ),
     );
+    final tip = tooltip;
+    if (tip == null) return button;
+    return Tooltip(message: tip, child: button);
   }
 }
 

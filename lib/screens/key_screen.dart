@@ -13,6 +13,7 @@ import '../models/species.dart';
 import '../state/progress_controller.dart';
 import '../state/session_controller.dart';
 import '../theme/flora_theme.dart';
+import '../widgets/beta_mark.dart';
 import '../widgets/glossary_text.dart';
 import '../widgets/species_image.dart';
 import 'species_detail_screen.dart';
@@ -32,6 +33,56 @@ class _KeyScreenState extends State<KeyScreen> {
   bool _matching = false;
   String? _matchedId;
   int? _matchedPercent;
+  int _matchToken = 0;
+  SessionController? _session;
+
+  bool get _consumesBack => _key.canUndo || _started || _photo != null || _matching;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _publishBack());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _session = context.read<SessionController>();
+  }
+
+  @override
+  void dispose() {
+    _session?.bindBack(null, handles: false, notify: false);
+    super.dispose();
+  }
+
+  void _publishBack() {
+    if (!mounted) return;
+    final session = _session;
+    if (session == null) return;
+    final onIdentify = session.role == 'tourist' && session.tab == 2 && !Navigator.canPop(context);
+    session.bindBack(_onSystemBack, handles: onIdentify && _consumesBack);
+  }
+
+  bool _onSystemBack() {
+    if (!mounted) return false;
+    final session = _session;
+    if (session == null || session.tab != 2 || Navigator.canPop(context)) return false;
+    return _retreat();
+  }
+
+  bool _retreat() {
+    _matchToken++;
+    if (_key.canUndo) {
+      setState(_key.undo);
+      return true;
+    }
+    if (_started || _photo != null || _matching) {
+      _again();
+      return true;
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +98,27 @@ class _KeyScreenState extends State<KeyScreen> {
     }
     final question = _started ? _key.nextQuestion() : null;
 
-    final canLeave = Navigator.canPop(context);
-    return Scaffold(
+    final pushed = Navigator.canPop(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _publishBack());
+    return PopScope(
+      canPop: !pushed || !_consumesBack,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop || !pushed) return;
+        _retreat();
+      },
+      child: Scaffold(
       backgroundColor: cream,
       body: SafeArea(
         child: Column(children: [
-          if (canLeave)
+          if (_consumesBack || pushed)
             Align(
               alignment: Alignment.centerLeft,
               child: IconButton(
                 tooltip: 'Назад',
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  if (_retreat()) return;
+                  if (pushed) Navigator.pop(context);
+                },
                 icon: const Icon(Icons.arrow_back, color: ink),
               ),
             ),
@@ -95,6 +156,7 @@ class _KeyScreenState extends State<KeyScreen> {
           ),
         ]),
       ),
+    ),
     );
   }
 
@@ -110,6 +172,7 @@ class _KeyScreenState extends State<KeyScreen> {
       return;
     }
     if (file == null || !mounted) return;
+    final token = ++_matchToken;
     setState(() {
       _photo = file;
       _matching = true;
@@ -117,9 +180,9 @@ class _KeyScreenState extends State<KeyScreen> {
       _matchedPercent = null;
     });
     final bytes = await file.readAsBytes();
-    if (!mounted || _photo?.path != file.path) return;
+    if (!mounted || token != _matchToken || _photo?.path != file.path) return;
     final guess = await CatalogCards.guess(bytes, context.read<ContentRepository>().species);
-    if (!mounted || _photo?.path != file.path) return;
+    if (!mounted || token != _matchToken || _photo?.path != file.path) return;
     setState(() {
       _matching = false;
       _matchedId = guess?.speciesId;
@@ -181,7 +244,11 @@ class _Intro extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 16),
-      const Text('НЕЙРОСЕТЬ', style: TextStyle(letterSpacing: 1.1, fontWeight: FontWeight.w800, color: forest, fontSize: 13)),
+      const Row(children: [
+        Text('НЕЙРОСЕТЬ', style: TextStyle(letterSpacing: 1.1, fontWeight: FontWeight.w800, color: forest, fontSize: 13)),
+        SizedBox(width: 8),
+        BetaMark(),
+      ]),
       const SizedBox(height: 6),
       Text(
         FlowerVision.status(hasPhoto: photo != null, matching: matching, speciesName: matched?.nameRu, percent: percent),

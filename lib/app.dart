@@ -14,6 +14,7 @@ import 'state/observation_controller.dart';
 import 'state/session_controller.dart';
 import 'theme/flora_theme.dart';
 import 'widgets/achievement_banner.dart';
+import 'widgets/confirm_exit.dart';
 import 'widgets/flora_nav_bar.dart';
 import 'widgets/splash_gate.dart';
 
@@ -23,10 +24,11 @@ class LenskieFloraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '«Флора Ленских столбов»: карманная красная книга',
+      title: 'Флора Ленских Столбов',
       debugShowCheckedModeBanner: false,
       theme: buildFloraTheme(),
-      builder: (context, child) => AchievementBannerHost(child: child ?? const SizedBox.shrink()),
+      builder: (context, child) =>
+          AchievementBannerHost(child: child ?? const SizedBox.shrink()),
       home: const SplashGate(child: AppStart()),
     );
   }
@@ -58,16 +60,23 @@ class InspectorShell extends StatelessWidget {
       const InspectorHomeScreen(),
       const InspectorNotesScreen(),
       MapScreen(
+        active: session.tab == 2,
         showOwnPoints: true,
-        pins: [for (final note in notes) if (note.lat != null && note.lon != null) note],
+        pins: [
+          for (final note in notes)
+            if (note.lat != null && note.lon != null) note
+        ],
       ),
       const InspectorNotesScreen(reports: true),
       const ProfileScreen(),
     ];
-    return Scaffold(
-      backgroundColor: cream,
-      body: IndexedStack(index: session.tab, children: pages),
-      bottomNavigationBar: FloraNavBar(index: session.tab, onTap: session.selectTab),
+    return ShellBack(
+      child: Scaffold(
+        backgroundColor: cream,
+        body: IndexedStack(index: session.tab, children: pages),
+        bottomNavigationBar:
+            FloraNavBar(index: session.tab, onTap: session.selectTab),
+      ),
     );
   }
 }
@@ -78,17 +87,20 @@ class GuideShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final session = context.watch<SessionController>();
-    const pages = [
-      GuideHomeScreen(),
-      CatalogScreen(),
-      GuideExcursionsScreen(),
-      MapScreen(),
-      ProfileScreen(),
+    final pages = [
+      const GuideHomeScreen(),
+      const CatalogScreen(),
+      const GuideExcursionsScreen(),
+      MapScreen(active: session.tab == 3),
+      const ProfileScreen(),
     ];
-    return Scaffold(
-      backgroundColor: cream,
-      body: IndexedStack(index: session.tab, children: pages),
-      bottomNavigationBar: FloraNavBar(index: session.tab, onTap: session.selectTab),
+    return ShellBack(
+      child: Scaffold(
+        backgroundColor: cream,
+        body: IndexedStack(index: session.tab, children: pages),
+        bottomNavigationBar:
+            FloraNavBar(index: session.tab, onTap: session.selectTab),
+      ),
     );
   }
 }
@@ -99,17 +111,43 @@ class TouristShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final session = context.watch<SessionController>();
-    const pages = [
-      HomeScreen(),
-      CatalogScreen(),
-      KeyScreen(),
-      MapScreen(),
-      ProfileScreen(),
+    final pages = [
+      const HomeScreen(),
+      const CatalogScreen(),
+      const KeyScreen(),
+      MapScreen(active: session.tab == 3),
+      const ProfileScreen(),
     ];
-    return Scaffold(
-      backgroundColor: cream,
-      body: IndexedStack(index: session.tab, children: pages),
-      bottomNavigationBar: FloraNavBar(index: session.tab, onTap: session.selectTab),
+    return ShellBack(
+      child: Scaffold(
+        backgroundColor: cream,
+        body: IndexedStack(index: session.tab, children: pages),
+        bottomNavigationBar:
+            FloraNavBar(index: session.tab, onTap: session.selectTab),
+      ),
+    );
+  }
+}
+
+class ShellBack extends StatelessWidget {
+  final Widget child;
+  const ShellBack({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final session = context.watch<SessionController>();
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (session.tryBack()) return;
+        if (session.tab != 0) {
+          session.selectTab(0);
+          return;
+        }
+        confirmAppExit(context);
+      },
+      child: child,
     );
   }
 }

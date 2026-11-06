@@ -12,7 +12,7 @@ const chipRed = Color(0xFFF6D9D6);
 const chipRedText = Color(0xFF8E3D3A);
 
 const floraText = 'Manrope';
-const floraDisplay = 'MADE Barista';
+const floraDisplay = 'Neucha';
 
 ThemeData buildFloraTheme() {
   final base = ThemeData(

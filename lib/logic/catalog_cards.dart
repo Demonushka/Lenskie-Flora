@@ -24,6 +24,7 @@ class CatalogCards {
     final query = await signatureOf(photo);
     final scores = <String, double>{};
     for (final item in species) {
+      await Future<void>.delayed(Duration.zero);
       final asset = item.photos.where((photo) => photo.kind == 'general').firstOrNull?.asset ?? item.photos.firstOrNull?.asset;
       if (asset == null) continue;
       final stored = _cache[item.id] ??= await signatureOf((await rootBundle.load(asset)).buffer.asUint8List());

@@ -11,8 +11,7 @@ import '../services/sync_service.dart';
 
 enum OutboxType {
   report('reports', 'Сообщение о находке'),
-  survey('surveys', 'Опрос'),
-  quiz('quiz-results', 'Результат викторины');
+  survey('surveys', 'Опрос');
 
   final String path;
   final String label;
@@ -71,10 +70,19 @@ class OutboxController extends ChangeNotifier {
   OutboxController(this._store, this._sync) {
     final j = _store.readJson(_key);
     if (j != null) {
-      items.addAll(((j['items'] as List?) ?? const [])
-          .map((e) => OutboxItem.fromJson((e as Map).cast<String, dynamic>())));
+      final raw = (j['items'] as List?) ?? const [];
+      var droppedQuiz = false;
+      for (final entry in raw) {
+        final map = (entry as Map).cast<String, dynamic>();
+        if (map['type'] == 'quiz') {
+          droppedQuiz = true;
+          continue;
+        }
+        items.add(OutboxItem.fromJson(map));
+      }
       final last = j['lastSyncAt'] as String?;
       lastSyncAt = last == null ? null : DateTime.parse(last);
+      if (droppedQuiz) unawaited(_save());
     }
   }
 

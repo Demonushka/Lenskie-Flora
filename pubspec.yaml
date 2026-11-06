@@ -1,7 +1,7 @@
 name: lenskie_flora
 description: Интерактивный определитель редких и исчезающих растений национального парка «Ленские столбы».
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -20,6 +20,7 @@ dependencies:
   flutter_svg: ^2.2.3
   audioplayers: ^6.8.1
   crypto: ^3.0.7
+  file_picker: ^13.3.2
 
 dev_dependencies:
   flutter_test:
@@ -38,6 +39,6 @@ flutter:
     - family: Manrope
       fonts:
         - asset: assets/fonts/Manrope.ttf
-    - family: MADE Barista
+    - family: Neucha
       fonts:
-        - asset: assets/fonts/MADEBarista.ttf
+        - asset: assets/fonts/Neucha-Regular.ttf

@@ -42,7 +42,7 @@ class FlowerVision {
 
   static String status({required bool hasPhoto, bool matching = false, String? speciesName, int? percent}) {
     if (!hasPhoto) {
-      return 'Нейросеть подключена к определению по фото. Снимок сверяется с карточками каталога.';
+      return 'Нейросеть в бете. Снимок сверяется с карточками каталога, само определение ещё разрабатывается.';
     }
     if (matching) return 'Сверяю снимок с карточками каталога.';
     if (speciesName != null && percent != null) {

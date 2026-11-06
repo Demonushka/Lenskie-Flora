@@ -32,9 +32,12 @@ void main() {
     await tester.pumpWidget(MultiProvider(
       providers: [
         Provider.value(value: content),
-        ChangeNotifierProvider(create: (_) => ProgressController(store, totalSpecies: content.species.length)),
+        ChangeNotifierProvider(
+            create: (_) => ProgressController(store,
+                totalSpecies: content.species.length)),
         ChangeNotifierProvider.value(value: session),
-        ChangeNotifierProvider(create: (_) => OutboxController(store, SyncService())),
+        ChangeNotifierProvider(
+            create: (_) => OutboxController(store, SyncService())),
       ],
       child: const LenskieFloraApp(),
     ));
@@ -54,7 +57,9 @@ void main() {
     await tester.tap(find.text('МОЯ КОЛЛЕКЦИЯ'));
     await tester.pumpAndSettle();
     expect(find.text('Моя коллекция'), findsOneWidget);
-    expect(find.text('Коллекция пока пуста. Отметьте растение в карточке вида.'), findsOneWidget);
+    expect(
+        find.text('Коллекция пока пуста. Отметьте растение в карточке вида.'),
+        findsOneWidget);
     Navigator.of(tester.element(find.text('Моя коллекция'))).pop();
     await tester.pump();
 
@@ -71,7 +76,9 @@ void main() {
     expect(find.byType(SpeciesDetailScreen), findsOneWidget);
     expect(find.text('Семейство'), findsOneWidget);
     await tester.drag(
-      find.descendant(of: find.byType(SpeciesDetailScreen), matching: find.byType(ListView)),
+      find.descendant(
+          of: find.byType(SpeciesDetailScreen),
+          matching: find.byType(ListView)),
       const Offset(0, -800),
     );
     await tester.pump(const Duration(seconds: 1));
@@ -81,7 +88,8 @@ void main() {
     Navigator.of(tester.element(find.byType(SpeciesDetailScreen))).pop();
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
-    await tester.tap(find.descendant(of: find.byType(TouristShell), matching: find.text('Определить')));
+    await tester.tap(find.descendant(
+        of: find.byType(TouristShell), matching: find.text('Определить')));
     await tester.pump();
     expect(find.text('ОПРЕДЕЛЕНИЕ ПО ФОТО'), findsOneWidget);
     expect(find.text('НЕЙРОСЕТЬ'), findsOneWidget);
@@ -95,15 +103,40 @@ void main() {
     await tester.tap(find.text('Начать по признакам'));
     await tester.pump();
     expect(
-      find.byWidgetPredicate((widget) => widget is RichText && widget.text.toPlainText() == 'Какая форма листьев?'),
+      find.byWidgetPredicate((widget) =>
+          widget is RichText &&
+          widget.text.toPlainText() == 'Какая форма листьев?'),
       findsOneWidget,
     );
+
+    await tester.tap(find.byTooltip('Назад'));
+    await tester.pump();
+    expect(find.text('Начать по признакам'), findsOneWidget);
+
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    await navigator.maybePop();
+    await tester.pump();
+    expect(find.text('МОЯ КОЛЛЕКЦИЯ'), findsOneWidget);
+
+    await tester.tap(find.text('Растения'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(InkWell, 'Башмачок настоящий'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.tap(find.descendant(
+        of: find.byType(SpeciesDetailScreen),
+        matching: find.byTooltip('Назад')));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(SpeciesDetailScreen), findsNothing);
 
     await tester.tap(find.text('Определить'));
     await tester.pump();
     expect(find.text('Начать по признакам'), findsOneWidget);
     expect(
-      find.byWidgetPredicate((widget) => widget is RichText && widget.text.toPlainText() == 'Какая форма листьев?'),
+      find.byWidgetPredicate((widget) =>
+          widget is RichText &&
+          widget.text.toPlainText() == 'Какая форма листьев?'),
       findsNothing,
     );
   });
@@ -148,9 +181,12 @@ void main() {
     await tester.pumpWidget(MultiProvider(
       providers: [
         Provider.value(value: content),
-        ChangeNotifierProvider(create: (_) => ProgressController(store, totalSpecies: content.species.length)),
+        ChangeNotifierProvider(
+            create: (_) => ProgressController(store,
+                totalSpecies: content.species.length)),
         ChangeNotifierProvider.value(value: session),
-        ChangeNotifierProvider(create: (_) => OutboxController(store, SyncService())),
+        ChangeNotifierProvider(
+            create: (_) => OutboxController(store, SyncService())),
         ChangeNotifierProvider(create: (_) => ExcursionController(store)),
       ],
       child: const LenskieFloraApp(),
@@ -163,5 +199,21 @@ void main() {
     expect(find.text('Экскурсии'), findsOneWidget);
     expect(find.byType(SvgPicture), findsWidgets);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('backing out of the home asks before leaving', (tester) async {
+    await pumpTourist(tester);
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    await navigator.maybePop();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('Выйти из приложения?'), findsOneWidget);
+    expect(find.text('МОЯ КОЛЛЕКЦИЯ'), findsOneWidget);
+    await tester.tap(find.text('Остаться'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text('Выйти из приложения?'), findsNothing);
+    expect(find.text('МОЯ КОЛЛЕКЦИЯ'), findsOneWidget);
   });
 }

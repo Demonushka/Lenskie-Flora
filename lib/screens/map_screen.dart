@@ -11,9 +11,10 @@ import 'inspector_home_screen.dart';
 import 'species_detail_screen.dart';
 
 class MapScreen extends StatefulWidget {
+  final bool active;
   final bool showOwnPoints;
   final List<FieldNote> pins;
-  const MapScreen({super.key, this.showOwnPoints = false, this.pins = const []});
+  const MapScreen({super.key, this.active = false, this.showOwnPoints = false, this.pins = const []});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -27,7 +28,13 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _locate());
+    if (widget.active) WidgetsBinding.instance.addPostFrameCallback((_) => _locate());
+  }
+
+  @override
+  void didUpdateWidget(MapScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.active && !oldWidget.active && !_locating) _locate();
   }
 
   @override

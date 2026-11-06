@@ -1,3 +1,37 @@
+class ExcursionMaterial {
+  final String id;
+  final String title;
+  final String text;
+  final String? fileName;
+  final String? filePath;
+
+  const ExcursionMaterial({
+    required this.id,
+    required this.title,
+    this.text = '',
+    this.fileName,
+    this.filePath,
+  });
+
+  bool get hasFile => filePath != null && filePath!.isNotEmpty;
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'text': text,
+        if (fileName != null) 'fileName': fileName,
+        if (filePath != null) 'filePath': filePath,
+      };
+
+  factory ExcursionMaterial.fromJson(Map<String, dynamic> json) => ExcursionMaterial(
+        id: json['id'] as String? ?? '',
+        title: json['title'] as String? ?? '',
+        text: json['text'] as String? ?? '',
+        fileName: json['fileName'] as String?,
+        filePath: json['filePath'] as String?,
+      );
+}
+
 class ExcursionStop {
   final String zoneId;
   final List<String> speciesIds;
@@ -49,6 +83,7 @@ class Excursion {
   final String departure;
   final List<String> participants;
   final List<ExcursionStop> stops;
+  final List<ExcursionMaterial> materials;
 
   const Excursion({
     required this.id,
@@ -59,6 +94,7 @@ class Excursion {
     this.departure = '10:00',
     this.participants = const [],
     this.stops = const [],
+    this.materials = const [],
   });
 
   int get doneCount => stops.where((stop) => stop.done).length;
@@ -71,6 +107,7 @@ class Excursion {
     String? departure,
     List<String>? participants,
     List<ExcursionStop>? stops,
+    List<ExcursionMaterial>? materials,
   }) =>
       Excursion(
         id: id,
@@ -81,6 +118,7 @@ class Excursion {
         departure: departure ?? this.departure,
         participants: participants ?? this.participants,
         stops: stops ?? this.stops,
+        materials: materials ?? this.materials,
       );
 
   Map<String, dynamic> toJson() => {
@@ -92,6 +130,7 @@ class Excursion {
         'departure': departure,
         'participants': participants,
         'stops': stops.map((stop) => stop.toJson()).toList(),
+        'materials': materials.map((item) => item.toJson()).toList(),
       };
 
   factory Excursion.fromJson(Map<String, dynamic> json) => Excursion(
@@ -106,6 +145,11 @@ class Excursion {
             .whereType<Map>()
             .map((e) => ExcursionStop.fromJson(e.cast<String, dynamic>()))
             .where((stop) => stop.zoneId.isNotEmpty)
+            .toList(),
+        materials: ((json['materials'] as List?) ?? const [])
+            .whereType<Map>()
+            .map((e) => ExcursionMaterial.fromJson(e.cast<String, dynamic>()))
+            .where((item) => item.id.isNotEmpty && item.title.isNotEmpty)
             .toList(),
       );
 }
