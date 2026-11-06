@@ -15,6 +15,8 @@
 	<string>Камера нужна, чтобы сфотографировать найденное растение, не срывая его.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Доступ к фото нужен, чтобы прикрепить снимок растения к сообщению о находке.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

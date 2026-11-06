@@ -12,6 +12,7 @@ const _icons = {
   'leaf': Icons.eco,
   'contacts': Icons.contact_phone_outlined,
   'project': Icons.info_outline,
+  'privacy': Icons.privacy_tip_outlined,
 };
 
 class MoreScreen extends StatelessWidget {

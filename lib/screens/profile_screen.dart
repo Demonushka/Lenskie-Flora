@@ -118,6 +118,7 @@ class ProfileScreen extends StatelessWidget {
           _Link(title: 'Правила парка', onTap: () => _openInfo(context, infoPages[0])),
           _Link(title: 'Контакты парка', onTap: () => _openInfo(context, infoPages[2])),
           _Link(title: 'О проекте', onTap: () => _openInfo(context, infoPages[3])),
+          _Link(title: 'Политика конфиденциальности', onTap: () => _openInfo(context, infoPages[4])),
           if (!inspector) ...[
             _Link(title: 'Сообщить о находке', onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ReportScreen()))),
             _Link(

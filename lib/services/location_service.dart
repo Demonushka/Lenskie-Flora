@@ -1,4 +1,23 @@
+import 'dart:io';
+
 import 'package:geolocator/geolocator.dart';
+
+/// Android uses the phone's own GPS. The default path goes through Google
+/// Play services and fails offline or on phones that do not have them.
+LocationSettings locationFixSettings({bool? android}) {
+  final useAndroid = android ?? Platform.isAndroid;
+  if (useAndroid) {
+    return AndroidSettings(
+      accuracy: LocationAccuracy.high,
+      forceLocationManager: true,
+      timeLimit: const Duration(seconds: 45),
+    );
+  }
+  return const LocationSettings(
+    accuracy: LocationAccuracy.high,
+    timeLimit: Duration(seconds: 45),
+  );
+}
 
 class LocationResult {
   final Position? position;
@@ -20,10 +39,7 @@ class LocationService {
     }
     try {
       final pos = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 45),
-        ),
+        locationSettings: locationFixSettings(),
       );
       return LocationResult(position: pos);
     } catch (_) {

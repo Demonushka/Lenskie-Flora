@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lenskie_flora/app.dart';
+import 'package:lenskie_flora/screens/profile_screen.dart';
 import 'package:lenskie_flora/screens/species_detail_screen.dart';
 import 'package:lenskie_flora/data/content_repository.dart';
 import 'package:lenskie_flora/data/local_store.dart';
@@ -93,6 +94,22 @@ void main() {
     await tester.pump();
     expect(find.text('ОПРЕДЕЛЕНИЕ ПО ФОТО'), findsOneWidget);
     expect(find.text('НЕЙРОСЕТЬ'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('profile opens the privacy policy', (tester) async {
+    final session = await pumpTourist(tester);
+    session.selectTab(4);
+    await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('Политика конфиденциальности'),
+      200,
+      scrollable: find.descendant(
+          of: find.byType(ProfileScreen), matching: find.byType(Scrollable)),
+    );
+    await tester.tap(find.text('Политика конфиденциальности'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('ничего не отправляет на сервер'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
