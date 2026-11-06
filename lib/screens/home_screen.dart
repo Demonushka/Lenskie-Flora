@@ -5,6 +5,7 @@ import '../data/content_repository.dart';
 import '../state/progress_controller.dart';
 import '../state/session_controller.dart';
 import '../theme/flora_theme.dart';
+import '../widgets/cover_panel.dart';
 import '../widgets/park_banner.dart';
 import 'collection_screen.dart';
 import 'progress_screen.dart';
@@ -32,15 +33,16 @@ class HomeScreen extends StatelessWidget {
               color: forestDark,
               child: InkWell(
                 onTap: () => context.read<SessionController>().openIdentify(),
-                child: SizedBox(
-                  height: 272,
-                  child: Stack(fit: StackFit.expand, children: [
-                    const Image(
+                child: const CoverPanel(
+                  minHeight: 272,
+                  padding: EdgeInsets.all(22),
+                  background: Stack(fit: StackFit.expand, children: [
+                    Image(
                       image: AssetImage('assets/images/white_flower.jpg'),
                       fit: BoxFit.cover,
                       alignment: Alignment(0.15, -0.1),
                     ),
-                    const DecoratedBox(
+                    DecoratedBox(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           stops: [0, 0.46, 0.82],
@@ -48,27 +50,24 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(22),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundColor: Color(0x33FFFFFF),
-                          child: Icon(Icons.photo_camera_outlined, color: Colors.white),
-                        ),
-                        SizedBox(height: 18),
-                        Text(
-                          'ОПРЕДЕЛИТЬ\nРАСТЕНИЕ ПО ФОТО',
-                          style: TextStyle(fontFamily: floraDisplay, color: Colors.white, fontSize: 24, height: 0.95),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Нейросеть смотрит снимок.\nЕсли не знает — вопросы',
-                          style: TextStyle(color: Color(0xFFD5E0D4), fontSize: 15, height: 1.3),
-                        ),
-                      ]),
-                    ),
                   ]),
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Color(0x33FFFFFF),
+                      child: Icon(Icons.photo_camera_outlined, color: Colors.white),
+                    ),
+                    SizedBox(height: 18),
+                    Text(
+                      'ОПРЕДЕЛИТЬ\nРАСТЕНИЕ ПО ФОТО',
+                      style: TextStyle(fontFamily: floraDisplay, color: Colors.white, fontSize: 24, height: 0.95),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Нейросеть смотрит снимок.\nЕсли не знает — вопросы',
+                      style: TextStyle(color: Color(0xFFD5E0D4), fontSize: 15, height: 1.3),
+                    ),
+                  ],
                 ),
               ),
             ),

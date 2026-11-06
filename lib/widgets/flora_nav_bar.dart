@@ -70,12 +70,21 @@ class FloraNavBar extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        items[i].$3,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: index == i ? FontWeight.w600 : FontWeight.w500,
-                          color: index == i ? forest : const Color(0xFF8D8A82),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            items[i].$3,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontSize: 11,
+                              height: 1.05,
+                              fontWeight: index == i ? FontWeight.w600 : FontWeight.w500,
+                              color: index == i ? forest : const Color(0xFF8D8A82),
+                            ),
+                          ),
                         ),
                       ),
                     ]),

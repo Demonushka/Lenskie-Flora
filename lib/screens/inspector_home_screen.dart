@@ -13,6 +13,7 @@ import '../services/location_service.dart';
 import '../state/observation_controller.dart';
 import '../state/session_controller.dart';
 import '../theme/flora_theme.dart';
+import '../widgets/cover_panel.dart';
 import 'catalog_screen.dart';
 import 'theory_screen.dart';
 
@@ -34,9 +35,9 @@ class InspectorHomeScreen extends StatelessWidget {
               color: forestDark,
               child: InkWell(
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const InspectorCaptureScreen())),
-                child: const SizedBox(
-                  height: 230,
-                  child: Stack(fit: StackFit.expand, children: [
+                child: const CoverPanel(
+                  minHeight: 230,
+                  background: Stack(fit: StackFit.expand, children: [
                     Image(image: AssetImage('assets/images/white_flower.jpg'), fit: BoxFit.cover, alignment: Alignment(0.15, -0.1)),
                     DecoratedBox(
                       decoration: BoxDecoration(
@@ -46,21 +47,18 @@ class InspectorHomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(20),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundColor: Color(0x33FFFFFF),
-                          child: Icon(Icons.photo_camera_outlined, color: Colors.white),
-                        ),
-                        Spacer(),
-                        Text('Зафиксировать\nнаблюдение', style: TextStyle(fontFamily: floraDisplay, color: Colors.white, fontSize: 28, height: 0.95)),
-                        SizedBox(height: 8),
-                        Text('Добавьте растение, состояние\nтерритории или проблему', style: TextStyle(color: Color(0xFFD5E0D4), fontSize: 15, height: 1.25)),
-                      ]),
-                    ),
                   ]),
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Color(0x33FFFFFF),
+                      child: Icon(Icons.photo_camera_outlined, color: Colors.white),
+                    ),
+                    SizedBox(height: 16),
+                    Text('Зафиксировать\nнаблюдение', style: TextStyle(fontFamily: floraDisplay, color: Colors.white, fontSize: 28, height: 0.95)),
+                    SizedBox(height: 8),
+                    Text('Добавьте растение, состояние\nтерритории или проблему', style: TextStyle(color: Color(0xFFD5E0D4), fontSize: 15, height: 1.25)),
+                  ],
                 ),
               ),
             ),
@@ -587,41 +585,34 @@ class _InspectorBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(28),
-      child: SizedBox(
-        height: 188,
-        child: Stack(children: [
-          const Positioned.fill(child: Image(image: AssetImage('assets/images/cliffs.jpg'), fit: BoxFit.cover, alignment: Alignment.centerRight)),
-          const Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(stops: [0, 0.46, 0.82], colors: [Color(0xFFF3F0E6), Color(0xD9F3F0E6), Color(0x00F3F0E6)]),
-              ),
-            ),
+    return const CoverPanel(
+      minHeight: 188,
+      padding: EdgeInsets.fromLTRB(16, 16, 16, 14),
+      background: Stack(fit: StackFit.expand, children: [
+        Image(image: AssetImage('assets/images/cliffs.jpg'), fit: BoxFit.cover, alignment: Alignment.centerRight),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(stops: [0, 0.46, 0.82], colors: [Color(0xFFF3F0E6), Color(0xD9F3F0E6), Color(0x00F3F0E6)]),
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 14),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Row(children: [
-                Icon(Icons.spa, color: forest, size: 22),
-                SizedBox(width: 8),
-                Expanded(child: Text('Флора\nЛенских столбов', style: TextStyle(fontFamily: floraDisplay, fontSize: 20, height: 1.02, color: ink))),
-              ]),
-              SizedBox(height: 8),
-              Row(children: [
-                Icon(Icons.shield_outlined, color: forest, size: 18),
-                SizedBox(width: 8),
-                Text('Инспектор', style: TextStyle(fontFamily: floraDisplay, fontSize: 22, color: ink)),
-              ]),
-              SizedBox(height: 6),
-              Text('Фиксируйте наблюдения,\nследите за состоянием\nтерритории и вносите данные', style: TextStyle(fontSize: 13, height: 1.25, color: moss)),
-              SizedBox(height: 8),
-              SizedBox(width: 42, height: 2, child: ColoredBox(color: forest)),
-            ]),
-          ),
+        ),
+      ]),
+      children: [
+        Row(children: [
+          Icon(Icons.spa, color: forest, size: 22),
+          SizedBox(width: 8),
+          Expanded(child: Text('Флора\nЛенских столбов', style: TextStyle(fontFamily: floraDisplay, fontSize: 20, height: 1.02, color: ink))),
         ]),
-      ),
+        SizedBox(height: 8),
+        Row(children: [
+          Icon(Icons.shield_outlined, color: forest, size: 18),
+          SizedBox(width: 8),
+          Text('Инспектор', style: TextStyle(fontFamily: floraDisplay, fontSize: 22, color: ink)),
+        ]),
+        SizedBox(height: 6),
+        Text('Фиксируйте наблюдения,\nследите за состоянием\nтерритории и вносите данные', style: TextStyle(fontSize: 13, height: 1.25, color: moss)),
+        SizedBox(height: 8),
+        SizedBox(width: 42, height: 2, child: ColoredBox(color: forest)),
+      ],
     );
   }
 }
